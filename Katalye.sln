@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Exporter", "src\Katalye.Exporter\Katalye.Exporter.csproj", "{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Katalye.Exporter.Docker", "docker\Katalye.Exporter\Katalye.Exporter.Docker.dcproj", "{BA8263DB-7B17-46CB-801A-B16209526F82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA8263DB-7B17-46CB-801A-B16209526F82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA8263DB-7B17-46CB-801A-B16209526F82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA8263DB-7B17-46CB-801A-B16209526F82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA8263DB-7B17-46CB-801A-B16209526F82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

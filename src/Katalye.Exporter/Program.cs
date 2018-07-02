@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
@@ -17,6 +18,7 @@ namespace Katalye.Exporter
         [UsedImplicitly]
         private async Task OnExecuteAsync()
         {
+            Console.WriteLine("Hello world!");
         }
     }
 }
