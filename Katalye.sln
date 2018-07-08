@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Exporter", "src\Katalye.Exporter\Katalye.Exporter.csproj", "{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Api", "src\Katalye.Api\Katalye.Api.csproj", "{2DDDC665-1F67-4FF6-9E10-EBD50BF12966}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Katalye.Exporter.Docker", "docker\Katalye.Exporter\Katalye.Exporter.Docker.dcproj", "{BA8263DB-7B17-46CB-801A-B16209526F82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Data", "src\Katalye.Data\Katalye.Data.csproj", "{FD75C545-91D3-483D-85FE-0D2C58E5F1C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Katalye.Host", "src\Katalye.Host\Katalye.Host.csproj", "{060C0326-C97E-4BA6-94DA-D0046FDFFF63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +15,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2AEAB07A-4058-4012-8CEF-5B41FDEC6BDF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA8263DB-7B17-46CB-801A-B16209526F82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA8263DB-7B17-46CB-801A-B16209526F82}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA8263DB-7B17-46CB-801A-B16209526F82}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BA8263DB-7B17-46CB-801A-B16209526F82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DDDC665-1F67-4FF6-9E10-EBD50BF12966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DDDC665-1F67-4FF6-9E10-EBD50BF12966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DDDC665-1F67-4FF6-9E10-EBD50BF12966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DDDC665-1F67-4FF6-9E10-EBD50BF12966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD75C545-91D3-483D-85FE-0D2C58E5F1C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD75C545-91D3-483D-85FE-0D2C58E5F1C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD75C545-91D3-483D-85FE-0D2C58E5F1C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD75C545-91D3-483D-85FE-0D2C58E5F1C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060C0326-C97E-4BA6-94DA-D0046FDFFF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060C0326-C97E-4BA6-94DA-D0046FDFFF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060C0326-C97E-4BA6-94DA-D0046FDFFF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060C0326-C97E-4BA6-94DA-D0046FDFFF63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
