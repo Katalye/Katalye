@@ -3,11 +3,9 @@
 using JetBrains.Annotations;
 
 using Katalye.Api.Controllers;
-using Katalye.Components.Commands;
 using Katalye.Data;
 using Katalye.Host.StructureMap;
 
-using MediatR;
 using MediatR.StructureMap;
 
 using Microsoft.AspNetCore.Builder;
@@ -51,10 +49,7 @@ namespace Katalye.Host
         {
             var container = new Container();
 
-            container.Configure(config =>
-            {
-                config.AddRegistry<MediatrRegistry>();
-            });
+            container.Configure(config => { config.AddRegistry<MediatrRegistry>(); });
 
             container.UseMediatR();
 

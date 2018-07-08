@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 using Katalye.Data.Interfaces;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Katalye.Data.Entities
@@ -22,7 +23,7 @@ namespace Katalye.Data.Entities
         public string TargetType { get; set; }
 
         [Required]
-        public string Target { get; set; }
+        public List<string> Target { get; set; }
 
         [Required]
         public string User { get; set; }

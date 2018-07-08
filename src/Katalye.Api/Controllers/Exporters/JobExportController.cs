@@ -12,7 +12,7 @@ using NLog;
 
 namespace Katalye.Api.Controllers.Exporters
 {
-    [Route("api/v1/export/event")]
+    [Route("api/v1/export/event/salt/job/{jid:regex(\\d{{20}})}")]
     public class JobExportController : Controller
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
@@ -24,8 +24,8 @@ namespace Katalye.Api.Controllers.Exporters
             _mediator = mediator;
         }
 
-        [HttpPost("salt/job/{jid:regex(\\d{{20}})}/new")]
-        public async Task<IActionResult> NewJob([FromRoute] string jid, [FromBody] JobCreated.CreationData data)
+        [HttpPost("new")]
+        public async Task<IActionResult> NewJobEvent([FromRoute] string jid, [FromBody] JobCreated.CreationData data)
         {
             var result = await _mediator.Send(new JobCreated.Command
             {
@@ -35,10 +35,17 @@ namespace Katalye.Api.Controllers.Exporters
             return Ok(result);
         }
 
-        [HttpPost("salt/job/{jid:regex(\\d{{20}})}/ret/{minionId}")]
-        public IActionResult NewJob([FromRoute] string jid, [FromRoute] string minionId, [FromBody] JObject data)
+        [HttpPost("ret/{minionId}")]
+        public IActionResult ReturnEvent([FromRoute] string jid, [FromRoute] string minionId, [FromBody] JObject data)
         {
             Logger.Info($"Return from {minionId} for job with jid {jid} occurred. {data}");
+            return Ok();
+        }
+
+        [HttpPost("prog/{minionId}/{runNumber}")]
+        public IActionResult ProgressEvent([FromRoute] string jid, [FromRoute] string minionId, [FromRoute] int runNumber, [FromBody] JObject data)
+        {
+            Logger.Info($"Progress update from {minionId} for job with jid {jid} occurred. {data}");
             return Ok();
         }
     }

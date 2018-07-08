@@ -36,7 +36,8 @@ namespace Katalye.Components.Commands
             public string Jid { get; set; }
 
             [JsonProperty("tgt")]
-            public string Target { get; set; }
+            [JsonConverter(typeof(SingleOrArrayConverter<string>))]
+            public List<string> Target { get; set; }
 
             [JsonProperty("_stamp")]
             public DateTimeOffset TimeStamp { get; set; }

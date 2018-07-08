@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Katalye.Data.Entities
 {
-    public class JobMinionEvent : IEntity, IAuditable
+    public class JobMinionReturnEvent : IEntity, IAuditable
     {
         public Guid Id { get; set; }
 
