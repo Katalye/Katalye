@@ -10,4 +10,8 @@
     <PackageReference Include="NLog" Version="4.5.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Katalye.Components\Katalye.Components.csproj" />
+  </ItemGroup>
+
 </Project>

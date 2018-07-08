@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+
+using Katalye.Components.Commands;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Mvc;
 
 using Newtonsoft.Json.Linq;
 
@@ -11,14 +17,25 @@ namespace Katalye.Api.Controllers.Exporters
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        [HttpPost("salt/job/{jid:regex(\\d{{20}})}/new")]
-        public IActionResult NewJob([FromRoute] string jid, [FromBody] JObject data)
+        private readonly IMediator _mediator;
+
+        public JobExportController(IMediator mediator)
         {
-            Logger.Info($"New job with jid {jid} was created. {data}");
-            return Ok();
+            _mediator = mediator;
         }
 
-        [HttpPost("salt/job/{jid:regex(\\d{{20}})}/ret/{minionId?}")]
+        [HttpPost("salt/job/{jid:regex(\\d{{20}})}/new")]
+        public async Task<IActionResult> NewJob([FromRoute] string jid, [FromBody] JobCreated.CreationData data)
+        {
+            var result = await _mediator.Send(new JobCreated.Command
+            {
+                Jid = jid,
+                Data = data
+            });
+            return Ok(result);
+        }
+
+        [HttpPost("salt/job/{jid:regex(\\d{{20}})}/ret/{minionId}")]
         public IActionResult NewJob([FromRoute] string jid, [FromRoute] string minionId, [FromBody] JObject data)
         {
             Logger.Info($"Return from {minionId} for job with jid {jid} occurred. {data}");

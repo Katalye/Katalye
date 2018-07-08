@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Api", "src\Katalye.Api\Katalye.Api.csproj", "{2DDDC665-1F67-4FF6-9E10-EBD50BF12966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Katalye.Api", "src\Katalye.Api\Katalye.Api.csproj", "{2DDDC665-1F67-4FF6-9E10-EBD50BF12966}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Data", "src\Katalye.Data\Katalye.Data.csproj", "{FD75C545-91D3-483D-85FE-0D2C58E5F1C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Katalye.Data", "src\Katalye.Data\Katalye.Data.csproj", "{FD75C545-91D3-483D-85FE-0D2C58E5F1C8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Katalye.Host", "src\Katalye.Host\Katalye.Host.csproj", "{060C0326-C97E-4BA6-94DA-D0046FDFFF63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Components", "src\Katalye.Components\Katalye.Components.csproj", "{52D7004D-C54E-49F5-B5E0-A8B327FE8835}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{060C0326-C97E-4BA6-94DA-D0046FDFFF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{060C0326-C97E-4BA6-94DA-D0046FDFFF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{060C0326-C97E-4BA6-94DA-D0046FDFFF63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D7004D-C54E-49F5-B5E0-A8B327FE8835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D7004D-C54E-49F5-B5E0-A8B327FE8835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D7004D-C54E-49F5-B5E0-A8B327FE8835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D7004D-C54E-49F5-B5E0-A8B327FE8835}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
