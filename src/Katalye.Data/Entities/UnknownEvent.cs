@@ -6,27 +6,17 @@ using Newtonsoft.Json.Linq;
 
 namespace Katalye.Data.Entities
 {
-    public class JobMinionReturnEvent : IEntity, IAuditable
+    public class UnknownEvent: IEntity, IAuditable
     {
         public Guid Id { get; set; }
 
         [Required]
-        public Guid? JobMinionId { get; set; }
+        public string Tag { get; set; }
 
-        [ForeignKey(nameof(JobMinionId))]
-        public JobMinion JobMinion { get; set; }
-        
         [NotMapped]
-        public JObject ReturnData { get; set; }
-
-        public bool Success { get; set; }
-
-        public long ReturnCode { get; set; }
-
-        public DateTimeOffset Timestamp { get; set; }
+        public JObject Data { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }
-
         public DateTimeOffset ModifiedOn { get; set; }
     }
 }

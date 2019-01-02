@@ -22,6 +22,8 @@ namespace Katalye.Data
 
         public DbSet<JobMinionReturnEvent> JobMinionEvents { get; set; }
 
+        public DbSet<UnknownEvent> UnknownEvents { get; set; }
+
         public KatalyeContext(DbContextOptions<KatalyeContext> options) : base(options)
         {
         }
@@ -45,12 +47,16 @@ namespace Katalye.Data
             modelBuilder.Entity<JobMinion>()
                         .HasIndex(p => new { p.JobId, p.MinionId })
                         .IsUnique();
-
+            
             modelBuilder.Entity<JobMinionReturnEvent>()
-                        .Property(x => x.Type)
+                        .Property(x => x.ReturnData)
                         .IsRequired()
-                        .HasConversion<string>();
-            modelBuilder.Entity<JobMinionReturnEvent>()
+                        .HasConversion(
+                            obj => obj.ToString(),
+                            s => JObject.Parse(s)
+                        );
+
+            modelBuilder.Entity<UnknownEvent>()
                         .Property(x => x.Data)
                         .IsRequired()
                         .HasConversion(

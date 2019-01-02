@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
 using Katalye.Data.Interfaces;
-
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Katalye.Data.Entities

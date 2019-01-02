@@ -1,13 +1,8 @@
 ﻿using System.Threading.Tasks;
-
 using Katalye.Components.Commands;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
-
 using Newtonsoft.Json.Linq;
-
 using NLog;
 
 namespace Katalye.Api.Controllers.Exporters
@@ -36,10 +31,16 @@ namespace Katalye.Api.Controllers.Exporters
         }
 
         [HttpPost("ret/{minionId}")]
-        public IActionResult ReturnEvent([FromRoute] string jid, [FromRoute] string minionId, [FromBody] JObject data)
+        public async Task<IActionResult> ReturnEvent([FromRoute] string jid, [FromRoute] string minionId, [FromBody] JobReturned.Data data)
         {
-            Logger.Info($"Return from {minionId} for job with jid {jid} occurred. {data}");
-            return Ok();
+            var result = await _mediator.Send(new JobReturned.Command
+            {
+                Data = data,
+                Jid = jid,
+                MinionId = minionId
+            });
+            
+            return Ok(result);
         }
 
         [HttpPost("prog/{minionId}/{runNumber}")]

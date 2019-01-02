@@ -1,13 +1,20 @@
-﻿using MediatR;
-
-using StructureMap;
+﻿using Lamar;
+using MediatR;
 
 namespace Katalye.Host.StructureMap
 {
-    public class MediatrRegistry : Registry
+    public class MediatrRegistry : ServiceRegistry
     {
         public MediatrRegistry()
         {
+            Scan(scanner =>
+            {
+                scanner.AssemblyContainingType<IMediator>();
+                scanner.WithDefaultConventions();
+            });
+
+            For<ServiceFactory>().Use(x => x.GetInstance);
+
             Scan(scanner =>
             {
                 scanner.AssembliesAndExecutablesFromPath("./", assembly => assembly.FullName.StartsWith("Katalye."));

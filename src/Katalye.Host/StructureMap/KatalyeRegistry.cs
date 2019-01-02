@@ -1,8 +1,8 @@
-﻿using StructureMap;
+﻿using Lamar;
 
 namespace Katalye.Host.StructureMap
 {
-    public class KatalyeRegistry : Registry
+    public class KatalyeRegistry : ServiceRegistry
     {
         public KatalyeRegistry()
         {
