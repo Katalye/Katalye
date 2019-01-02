@@ -1,4 +1,5 @@
-﻿using Katalye.Components.Commands;
+﻿using System.Threading.Tasks;
+using Katalye.Components.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -16,9 +17,9 @@ namespace Katalye.Api.Controllers.Exporters
         }
 
         [HttpPost("{*tag}", Order = 99)]
-        public IActionResult Default([FromRoute] string tag, [FromBody] JObject data)
+        public async Task<IActionResult> Default([FromRoute] string tag, [FromBody] JObject data)
         {
-            _mediator.Send(new UnknownEventRecieved.Command
+            await _mediator.Send(new UnknownEventRecieved.Command
             {
                 Data = data,
                 Tag = tag
