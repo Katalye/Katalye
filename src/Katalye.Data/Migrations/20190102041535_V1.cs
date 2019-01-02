@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+// ReSharper disable All
 
 namespace Katalye.Data.Migrations
 {
@@ -83,37 +84,6 @@ namespace Katalye.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JobMinionEvents",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    MinionId = table.Column<Guid>(nullable: false),
-                    JobId = table.Column<Guid>(nullable: false),
-                    ReturnData = table.Column<string>(nullable: false),
-                    Success = table.Column<bool>(nullable: false),
-                    ReturnCode = table.Column<long>(nullable: false),
-                    Timestamp = table.Column<DateTimeOffset>(nullable: false),
-                    CreatedOn = table.Column<DateTimeOffset>(nullable: false),
-                    ModifiedOn = table.Column<DateTimeOffset>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_JobMinionEvents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_JobMinionEvents_Jobs_JobId",
-                        column: x => x.JobId,
-                        principalTable: "Jobs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JobMinionEvents_Minions_MinionId",
-                        column: x => x.MinionId,
-                        principalTable: "Minions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MinionAuthenticationEvents",
                 columns: table => new
                 {
@@ -137,21 +107,41 @@ namespace Katalye.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MinionReturnEvents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    MinionId = table.Column<Guid>(nullable: false),
+                    JobId = table.Column<Guid>(nullable: false),
+                    ReturnData = table.Column<string>(nullable: false),
+                    Success = table.Column<bool>(nullable: false),
+                    ReturnCode = table.Column<long>(nullable: false),
+                    Timestamp = table.Column<DateTimeOffset>(nullable: false),
+                    CreatedOn = table.Column<DateTimeOffset>(nullable: false),
+                    ModifiedOn = table.Column<DateTimeOffset>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MinionReturnEvents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MinionReturnEvents_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MinionReturnEvents_Minions_MinionId",
+                        column: x => x.MinionId,
+                        principalTable: "Minions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_JobCreationEvents_JobId",
                 table: "JobCreationEvents",
                 column: "JobId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_JobMinionEvents_JobId",
-                table: "JobMinionEvents",
-                column: "JobId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_JobMinionEvents_MinionId_JobId",
-                table: "JobMinionEvents",
-                columns: new[] { "MinionId", "JobId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -166,6 +156,17 @@ namespace Katalye.Data.Migrations
                 column: "MinionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MinionReturnEvents_JobId",
+                table: "MinionReturnEvents",
+                column: "JobId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MinionReturnEvents_MinionId_JobId",
+                table: "MinionReturnEvents",
+                columns: new[] { "MinionId", "JobId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Minions_MinionSlug",
                 table: "Minions",
                 column: "MinionSlug",
@@ -178,10 +179,10 @@ namespace Katalye.Data.Migrations
                 name: "JobCreationEvents");
 
             migrationBuilder.DropTable(
-                name: "JobMinionEvents");
+                name: "MinionAuthenticationEvents");
 
             migrationBuilder.DropTable(
-                name: "MinionAuthenticationEvents");
+                name: "MinionReturnEvents");
 
             migrationBuilder.DropTable(
                 name: "UnknownEvents");

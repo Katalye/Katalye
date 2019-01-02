@@ -122,7 +122,7 @@ namespace Katalye.Components.Commands
                         Timestamp = message.Data.Timestamp,
                         ReturnData = message.Data.Return
                     };
-                    _context.JobMinionEvents.Add(returnEvent);
+                    _context.MinionReturnEvents.Add(returnEvent);
                     await _context.SaveChangesAsync();
 
                     unit.Commit();

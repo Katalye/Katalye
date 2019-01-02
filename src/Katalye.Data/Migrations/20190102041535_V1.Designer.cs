@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Katalye.Data.Migrations
 {
     [DbContext(typeof(KatalyeContext))]
-    [Migration("20190102035245_V1")]
+    [Migration("20190102041535_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -169,7 +169,7 @@ namespace Katalye.Data.Migrations
                     b.HasIndex("MinionId", "JobId")
                         .IsUnique();
 
-                    b.ToTable("JobMinionEvents");
+                    b.ToTable("MinionReturnEvents");
                 });
 
             modelBuilder.Entity("Katalye.Data.Entities.UnknownEvent", b =>

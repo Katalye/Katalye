@@ -167,7 +167,7 @@ namespace Katalye.Data.Migrations
                     b.HasIndex("MinionId", "JobId")
                         .IsUnique();
 
-                    b.ToTable("JobMinionEvents");
+                    b.ToTable("MinionReturnEvents");
                 });
 
             modelBuilder.Entity("Katalye.Data.Entities.UnknownEvent", b =>

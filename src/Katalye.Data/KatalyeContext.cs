@@ -14,7 +14,7 @@ namespace Katalye.Data
     {
         public DbSet<Job> Jobs { get; set; }
 
-        public DbSet<MinionReturnEvent> JobMinionEvents { get; set; }
+        public DbSet<MinionReturnEvent> MinionReturnEvents { get; set; }
 
         public DbSet<JobCreationEvent> JobCreationEvents { get; set; }
 
