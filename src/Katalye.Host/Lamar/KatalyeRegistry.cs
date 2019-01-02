@@ -1,6 +1,6 @@
 ﻿using Lamar;
 
-namespace Katalye.Host.StructureMap
+namespace Katalye.Host.Lamar
 {
     public class KatalyeRegistry : ServiceRegistry
     {

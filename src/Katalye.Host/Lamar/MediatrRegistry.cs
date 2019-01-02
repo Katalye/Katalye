@@ -1,7 +1,7 @@
 ﻿using Lamar;
 using MediatR;
 
-namespace Katalye.Host.StructureMap
+namespace Katalye.Host.Lamar
 {
     public class MediatrRegistry : ServiceRegistry
     {
