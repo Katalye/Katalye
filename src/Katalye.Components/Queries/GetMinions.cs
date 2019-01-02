@@ -12,8 +12,8 @@ namespace Katalye.Components.Queries
     {
         public class Query : IRequest<Result>, IPaginatedQuery
         {
-            public int Page { get; set; }
-            public int Size { get; set; }
+            public int? Page { get; set; }
+            public int? Size { get; set; }
         }
 
         public class Result : PagedResult<Minion>
@@ -40,6 +40,7 @@ namespace Katalye.Components.Queries
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
                 var result = await _context.Minions
+                                           .OrderBy(x => x.MinionSlug)
                                            .Select(x => new Minion
                                            {
                                                Id = x.MinionSlug,

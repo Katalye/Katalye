@@ -12,7 +12,7 @@ namespace Katalye.Components
                                                                                             TResultContainer resultContainer)
             where TResultContainer : PagedResult<TResult>
         {
-            var result = await queryable.PageAsync(query.Page, query.Size);
+            var result = await queryable.PageAsync(query.Page ?? 1, query.Size ?? 10);
             resultContainer.Count = result.Count;
             resultContainer.Size = result.Size;
             resultContainer.Page = result.Page;
@@ -45,9 +45,9 @@ namespace Katalye.Components
 
     public interface IPaginatedQuery
     {
-        int Page { get; set; }
+        int? Page { get; set; }
 
-        int Size { get; set; }
+        int? Size { get; set; }
     }
 
     public class PagedResult<T>
