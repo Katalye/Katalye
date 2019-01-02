@@ -1,7 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using Hangfire;
+using Hangfire.Common;
+using Hangfire.PostgreSql;
+using JetBrains.Annotations;
 using Katalye.Api.Controllers;
 using Katalye.Data;
-using Katalye.Host.StructureMap;
+using Katalye.Host.Lamar;
+using Katalye.Host.Middleware;
 using Lamar;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +38,9 @@ namespace Katalye.Host
             services.AddEntityFrameworkNpgsql()
                     .AddDbContext<KatalyeContext>(options => options.UseNpgsql(connectionString));
 
+            services.AddHangfire(config =>
+                config.UsePostgreSqlStorage(Configuration.GetConnectionString("HangfireContext")));
+
             services.IncludeRegistry<MediatrRegistry>();
             services.IncludeRegistry<KatalyeRegistry>();
         }
@@ -41,6 +48,8 @@ namespace Katalye.Host
         [UsedImplicitly]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseMiddleware<AspNetCoreLoggingFilter>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -51,6 +60,14 @@ namespace Katalye.Host
             }
 
             app.UseMvc();
+            app.UseHangfireServer(new BackgroundJobServerOptions
+            {
+                FilterProvider = new JobFilterCollection
+                {
+                    app.ApplicationServices.GetService<HangfireLoggingFilter>()
+                }
+            });
+            app.UseHangfireDashboard();
         }
     }
 }

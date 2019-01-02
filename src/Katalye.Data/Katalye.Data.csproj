@@ -6,6 +6,10 @@
 
   <ItemGroup>
     <Compile Remove="Migrations\20180708193901_V1.cs" />
+    <Compile Remove="Migrations\20180708213112_V1.cs" />
+    <Compile Remove="Migrations\20190101233706_V2.cs" />
+    <Compile Remove="Migrations\20190102002318_V3.cs" />
+    <Compile Remove="Migrations\20190102003001_V4.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
