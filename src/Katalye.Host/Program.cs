@@ -1,9 +1,8 @@
 ﻿using System;
-
+using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-
 using NLog.Web;
 
 namespace Katalye.Host
@@ -37,6 +36,7 @@ namespace Katalye.Host
                        logging.SetMinimumLevel(LogLevel.Trace);
                    })
                    .UseNLog()
+                   .UseLamar()
                    .Build();
     }
 }
