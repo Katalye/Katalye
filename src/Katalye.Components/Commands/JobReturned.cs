@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Hangfire;
 using JetBrains.Annotations;
+using Katalye.Components.Exceptions;
 using Katalye.Data;
 using Katalye.Data.Entities;
 using MediatR;
@@ -19,7 +21,7 @@ namespace Katalye.Components.Commands
         {
             public string Jid { get; set; }
 
-            public string MinionId { get; set; }
+            public string MinionSlug { get; set; }
 
             public Data Data { get; set; }
         }
@@ -27,7 +29,7 @@ namespace Katalye.Components.Commands
         public class Data
         {
             [JsonProperty("fun_args")]
-            public JArray FunArgs { get; set; }
+            public JArray FunctionArguments { get; set; }
 
             [JsonProperty("jid")]
             public string Jid { get; set; }
@@ -45,7 +47,7 @@ namespace Katalye.Components.Commands
             public string Cmd { get; set; }
 
             [JsonProperty("_stamp")]
-            public DateTimeOffset Stamp { get; set; }
+            public DateTimeOffset Timestamp { get; set; }
 
             [JsonProperty("fun")]
             public string Fun { get; set; }
@@ -64,46 +66,67 @@ namespace Katalye.Components.Commands
             private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
             private readonly KatalyeContext _context;
+            private readonly IBackgroundJobClient _jobClient;
 
-            public Handler(KatalyeContext context)
+            public Handler(KatalyeContext context, IBackgroundJobClient jobClient)
             {
                 _context = context;
+                _jobClient = jobClient;
             }
 
-            public async Task<Result> Handle(Command message, CancellationToken cancellationToken)
+            public Task<Result> Handle(Command message, CancellationToken cancellationToken)
             {
-                Logger.Info($"Return from {message.MinionId} for job with jid {message.Jid} occurred.");
+                Logger.Info($"Return from {message.MinionSlug} for job with jid {message.Jid} occurred.");
 
-                using (var unit = await _context.Database.BeginTransactionAsync(cancellationToken))
+                _jobClient.Enqueue<Handler>(x => x.ProcessEvent(message));
+
+                return Task.FromResult(new Result());
+            }
+
+            [UsedImplicitly]
+            public async Task ProcessEvent(Command message)
+            {
+                using (var unit = await _context.Database.BeginTransactionAsync())
                 {
-                    var jobMinion = await _context.JobMinions
-                                                  .Where(x => x.MinionId == message.MinionId && x.Job.Jid == message.Jid)
-                                                  .SingleOrDefaultAsync(cancellationToken);
+                    var minion = await _context.Minions
+                                               .Where(x => x.MinionSlug == message.MinionSlug)
+                                               .SingleOrDefaultAsync();
 
-                    if (jobMinion == null)
+                    if (minion == null)
                     {
-                        Logger.Warn("Failed to reconcile job, ignoring event.");
-                        return new Result();
+                        Logger.Info($"Minion called {message.MinionSlug} does not exist, delaying event processing until minion re-authenicates.");
+                        throw new MinionUnknownException(message.MinionSlug);
                     }
 
-                    Logger.Trace($"Reconciling return event with known minion to job relationship - minion id {jobMinion.Id} -> job id {jobMinion.JobId}.");
+                    var job = await _context.Jobs.SingleOrDefaultAsync(x => x.Jid == message.Jid);
+                    var jobExists = job != null;
 
-                    var returnEvent = new JobMinionReturnEvent
+                    if (!jobExists)
                     {
-                        JobMinionId = jobMinion.Id,
+                        job = new Job
+                        {
+                            Arguments = message.Data.FunctionArguments,
+                            Function = message.Data.Fun,
+                            Jid = message.Jid
+                        };
+                        _context.Jobs.Add(job);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    var returnEvent = new MinionReturnEvent
+                    {
+                        MinionId = minion.Id,
+                        JobId = job.Id,
                         ReturnCode = message.Data.ReturnCode,
                         Success = message.Data.Success,
-                        Timestamp = message.Data.Stamp,
+                        Timestamp = message.Data.Timestamp,
                         ReturnData = message.Data.Return
                     };
                     _context.JobMinionEvents.Add(returnEvent);
-
-                    await _context.SaveChangesAsync(cancellationToken);
+                    await _context.SaveChangesAsync();
 
                     unit.Commit();
                 }
-
-                return new Result();
             }
         }
     }

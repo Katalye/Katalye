@@ -6,16 +6,22 @@ using Newtonsoft.Json.Linq;
 
 namespace Katalye.Data.Entities
 {
-    public class JobMinionReturnEvent : IEntity, IAuditable
+    public class MinionReturnEvent : IEntity, IAuditable
     {
         public Guid Id { get; set; }
 
         [Required]
-        public Guid? JobMinionId { get; set; }
+        public Guid? MinionId { get; set; }
 
-        [ForeignKey(nameof(JobMinionId))]
-        public JobMinion JobMinion { get; set; }
-        
+        [ForeignKey(nameof(MinionId))]
+        public Minion Minion { get; set; }
+
+        [Required]
+        public Guid? JobId { get; set; }
+
+        [ForeignKey(nameof(JobId))]
+        public Job Job { get; set; }
+
         [NotMapped]
         public JObject ReturnData { get; set; }
 

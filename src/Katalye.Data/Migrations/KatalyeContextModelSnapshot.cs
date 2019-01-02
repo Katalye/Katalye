@@ -37,20 +37,9 @@ namespace Katalye.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(20);
 
-                    b.Property<List<string>>("MissingMinions");
-
                     b.Property<DateTimeOffset>("ModifiedOn");
 
-                    b.Property<List<string>>("Target")
-                        .IsRequired();
-
-                    b.Property<string>("TargetType")
-                        .IsRequired();
-
-                    b.Property<DateTimeOffset>("TimeStamp");
-
-                    b.Property<string>("User")
-                        .IsRequired();
+                    b.Property<int>("Version");
 
                     b.HasKey("Id");
 
@@ -60,7 +49,7 @@ namespace Katalye.Data.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("Katalye.Data.Entities.JobMinion", b =>
+            modelBuilder.Entity("Katalye.Data.Entities.JobCreationEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -70,45 +59,28 @@ namespace Katalye.Data.Migrations
                     b.Property<Guid?>("JobId")
                         .IsRequired();
 
-                    b.Property<string>("MinionId")
-                        .IsRequired();
+                    b.Property<List<string>>("Minions");
+
+                    b.Property<List<string>>("MissingMinions");
 
                     b.Property<DateTimeOffset>("ModifiedOn");
 
+                    b.Property<string>("TargetType")
+                        .IsRequired();
+
+                    b.Property<List<string>>("Targets");
+
+                    b.Property<DateTimeOffset>("TimeStamp");
+
+                    b.Property<string>("User")
+                        .IsRequired();
+
                     b.HasKey("Id");
 
-                    b.HasIndex("JobId", "MinionId")
+                    b.HasIndex("JobId")
                         .IsUnique();
 
-                    b.ToTable("JobMinions");
-                });
-
-            modelBuilder.Entity("Katalye.Data.Entities.JobMinionReturnEvent", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset>("CreatedOn");
-
-                    b.Property<Guid?>("JobMinionId")
-                        .IsRequired();
-
-                    b.Property<DateTimeOffset>("ModifiedOn");
-
-                    b.Property<long>("ReturnCode");
-
-                    b.Property<string>("ReturnData")
-                        .IsRequired();
-
-                    b.Property<bool>("Success");
-
-                    b.Property<DateTimeOffset>("Timestamp");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JobMinionId");
-
-                    b.ToTable("JobMinionEvents");
+                    b.ToTable("JobCreationEvents");
                 });
 
             modelBuilder.Entity("Katalye.Data.Entities.Minion", b =>
@@ -164,6 +136,40 @@ namespace Katalye.Data.Migrations
                     b.ToTable("MinionAuthenticationEvents");
                 });
 
+            modelBuilder.Entity("Katalye.Data.Entities.MinionReturnEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset>("CreatedOn");
+
+                    b.Property<Guid?>("JobId")
+                        .IsRequired();
+
+                    b.Property<Guid?>("MinionId")
+                        .IsRequired();
+
+                    b.Property<DateTimeOffset>("ModifiedOn");
+
+                    b.Property<long>("ReturnCode");
+
+                    b.Property<string>("ReturnData")
+                        .IsRequired();
+
+                    b.Property<bool>("Success");
+
+                    b.Property<DateTimeOffset>("Timestamp");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("MinionId", "JobId")
+                        .IsUnique();
+
+                    b.ToTable("JobMinionEvents");
+                });
+
             modelBuilder.Entity("Katalye.Data.Entities.UnknownEvent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -184,7 +190,7 @@ namespace Katalye.Data.Migrations
                     b.ToTable("UnknownEvents");
                 });
 
-            modelBuilder.Entity("Katalye.Data.Entities.JobMinion", b =>
+            modelBuilder.Entity("Katalye.Data.Entities.JobCreationEvent", b =>
                 {
                     b.HasOne("Katalye.Data.Entities.Job", "Job")
                         .WithMany()
@@ -192,16 +198,21 @@ namespace Katalye.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Katalye.Data.Entities.JobMinionReturnEvent", b =>
+            modelBuilder.Entity("Katalye.Data.Entities.MinionAuthenticationEvent", b =>
                 {
-                    b.HasOne("Katalye.Data.Entities.JobMinion", "JobMinion")
+                    b.HasOne("Katalye.Data.Entities.Minion", "Minion")
                         .WithMany()
-                        .HasForeignKey("JobMinionId")
+                        .HasForeignKey("MinionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Katalye.Data.Entities.MinionAuthenticationEvent", b =>
+            modelBuilder.Entity("Katalye.Data.Entities.MinionReturnEvent", b =>
                 {
+                    b.HasOne("Katalye.Data.Entities.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Katalye.Data.Entities.Minion", "Minion")
                         .WithMany()
                         .HasForeignKey("MinionId")

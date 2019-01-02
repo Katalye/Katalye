@@ -14,9 +14,9 @@ namespace Katalye.Data
     {
         public DbSet<Job> Jobs { get; set; }
 
-        public DbSet<JobMinion> JobMinions { get; set; }
+        public DbSet<MinionReturnEvent> JobMinionEvents { get; set; }
 
-        public DbSet<JobMinionReturnEvent> JobMinionEvents { get; set; }
+        public DbSet<JobCreationEvent> JobCreationEvents { get; set; }
 
         public DbSet<UnknownEvent> UnknownEvents { get; set; }
 
@@ -40,15 +40,8 @@ namespace Katalye.Data
                             list => list.ToString(),
                             s => JArray.Parse(s)
                         );
-            modelBuilder.Entity<Job>()
-                        .Property(x => x.Target)
-                        .IsRequired();
 
-            modelBuilder.Entity<JobMinion>()
-                        .HasIndex(p => new {p.JobId, p.MinionId})
-                        .IsUnique();
-
-            modelBuilder.Entity<JobMinionReturnEvent>()
+            modelBuilder.Entity<MinionReturnEvent>()
                         .Property(x => x.ReturnData)
                         .IsRequired()
                         .HasConversion(
@@ -66,6 +59,14 @@ namespace Katalye.Data
 
             modelBuilder.Entity<Minion>()
                         .HasIndex(x => x.MinionSlug)
+                        .IsUnique();
+
+            modelBuilder.Entity<MinionReturnEvent>()
+                        .HasIndex(nameof(MinionReturnEvent.MinionId), nameof(MinionReturnEvent.JobId))
+                        .IsUnique();
+
+            modelBuilder.Entity<JobCreationEvent>()
+                        .HasIndex(x => x.JobId)
                         .IsUnique();
         }
 

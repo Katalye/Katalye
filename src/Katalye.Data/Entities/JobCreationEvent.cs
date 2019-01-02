@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
 using Katalye.Data.Interfaces;
 
 namespace Katalye.Data.Entities
 {
-    public class JobMinion : IEntity, IAuditable
+    public class JobCreationEvent : IEntity, IAuditable
     {
         public Guid Id { get; set; }
 
@@ -16,8 +16,19 @@ namespace Katalye.Data.Entities
         [ForeignKey(nameof(JobId))]
         public Job Job { get; set; }
 
+        public DateTimeOffset TimeStamp { get; set; }
+
         [Required]
-        public string MinionId { get; set; }
+        public string User { get; set; }
+
+        public List<string> Minions { get; set; }
+
+        public List<string> MissingMinions { get; set; }
+
+        public List<string> Targets { get; set; }
+
+        [Required]
+        public string TargetType { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }
 

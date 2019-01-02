@@ -37,7 +37,7 @@ namespace Katalye.Api.Controllers.Exporters
             {
                 Data = data,
                 Jid = jid,
-                MinionId = minionId
+                MinionSlug = minionId
             });
             
             return Ok(result);

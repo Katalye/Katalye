@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Hangfire;
 using JetBrains.Annotations;
-
 using Katalye.Data;
 using Katalye.Data.Entities;
-
 using MediatR;
-
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
 using NLog;
 
 namespace Katalye.Components.Commands
@@ -68,46 +64,60 @@ namespace Katalye.Components.Commands
             private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
             private readonly KatalyeContext _context;
+            private readonly IBackgroundJobClient _jobClient;
 
-            public Handler(KatalyeContext context)
+            public Handler(KatalyeContext context, IBackgroundJobClient jobClient)
             {
                 _context = context;
+                _jobClient = jobClient;
             }
 
-            public async Task<Result> Handle(Command message, CancellationToken cancellationToken)
+            public Task<Result> Handle(Command message, CancellationToken cancellationToken)
             {
                 Logger.Info($"A new job {message.Jid} was created.");
 
-                using (var unit = await _context.Database.BeginTransactionAsync(cancellationToken))
-                {
-                    var job = new Job
-                    {
-                        Jid = message.Jid,
-                        Function = message.Data.Function,
-                        TargetType = message.Data.TargetType,
-                        Target = message.Data.Target,
-                        TimeStamp = message.Data.TimeStamp,
-                        User = message.Data.User,
-                        Arguments = message.Data.Arguments,
-                        MissingMinions = message.Data.Missing
-                    };
-                    _context.Jobs.Add(job);
-                    await _context.SaveChangesAsync(cancellationToken);
+                _jobClient.Enqueue<Handler>(x => x.ProcessEvent(message));
 
-                    var jobMinions = message.Data.Minions.Select(x => new JobMinion
+                return Task.FromResult(new Result());
+            }
+
+            [UsedImplicitly]
+            public async Task ProcessEvent(Command message)
+            {
+                using (var unit = await _context.Database.BeginTransactionAsync())
+                {
+                    var job = await _context.Jobs.SingleOrDefaultAsync(x => x.Jid == message.Jid);
+
+                    var jobExists = job != null;
+                    if (!jobExists)
                     {
-                        MinionId = x,
-                        JobId = job.Id
-                    });
-                    _context.JobMinions.AddRange(jobMinions);
-                    await _context.SaveChangesAsync(cancellationToken);
+                        job = new Job
+                        {
+                            Jid = message.Jid,
+                            Function = message.Data.Function,
+                            Arguments = message.Data.Arguments
+                        };
+                        _context.Jobs.Add(job);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    var creationEvent = new JobCreationEvent
+                    {
+                        JobId = job.Id,
+                        Minions = message.Data.Minions,
+                        MissingMinions = message.Data.Missing,
+                        Targets = message.Data.Target,
+                        TargetType = message.Data.TargetType,
+                        User = message.Data.User,
+                        TimeStamp = message.Data.TimeStamp
+                    };
+                    _context.JobCreationEvents.Add(creationEvent);
+                    await _context.SaveChangesAsync();
 
                     unit.Commit();
                 }
 
                 Logger.Info($"Job {message.Jid} was committed.");
-
-                return new Result();
             }
         }
     }
