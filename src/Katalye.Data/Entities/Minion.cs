@@ -13,6 +13,8 @@ namespace Katalye.Data.Entities
 
         public DateTimeOffset? LastAuthentication { get; set; }
 
+        public DateTimeOffset? LastSeen { get; set; }
+
         public int Version { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }

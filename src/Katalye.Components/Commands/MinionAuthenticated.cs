@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using Katalye.Data;
 using Katalye.Data.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NLog;
 
@@ -43,11 +42,13 @@ namespace Katalye.Components.Commands
 
             private readonly KatalyeContext _context;
             private readonly IBackgroundJobClient _jobClient;
+            private readonly IMediator _mediator;
 
-            public Handler(KatalyeContext context, IBackgroundJobClient jobClient)
+            public Handler(KatalyeContext context, IBackgroundJobClient jobClient, IMediator mediator)
             {
                 _context = context;
                 _jobClient = jobClient;
+                _mediator = mediator;
             }
 
             public Task<Result> Handle(Command message, CancellationToken cancellationToken)
@@ -64,27 +65,16 @@ namespace Katalye.Components.Commands
             {
                 Logger.Info($"Processing authentication event for minion {message.Slug}.");
 
+                var minionSeenResult = await _mediator.Send(new MinionSeen.Command
+                {
+                    Slug = message.Slug,
+                    Timestamp = message.Timestamp
+                });
+
                 using (var unit = await _context.Database.BeginTransactionAsync())
                 {
-                    var minion = await _context.Minions
-                                               .SingleOrDefaultAsync(x => x.MinionSlug == message.Slug);
-
-                    var minionExists = minion != null;
-                    if (!minionExists)
-                    {
-                        Logger.Info($"Minion {message.Slug} is unknown, it will be recorded.");
-                        minion = new Minion
-                        {
-                            LastAuthentication = message.Timestamp,
-                            MinionSlug = message.Slug
-                        };
-                        _context.Minions.Add(minion);
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        minion.LastAuthentication = message.Timestamp;
-                    }
+                    var minion = await _context.Minions.FindAsync(minionSeenResult.MinionId);
+                    minion.LastAuthentication = message.Timestamp;
 
                     var authEvent = new MinionAuthenticationEvent
                     {
