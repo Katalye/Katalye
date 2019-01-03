@@ -25,6 +25,7 @@ namespace Katalye.Components.Queries
             public string Id { get; set; }
 
             public DateTimeOffset? LastAuthenticated { get; set; }
+            public DateTimeOffset? LastSeen { get; set; }
         }
 
         [UsedImplicitly]
@@ -44,7 +45,8 @@ namespace Katalye.Components.Queries
                                            .Select(x => new Minion
                                            {
                                                Id = x.MinionSlug,
-                                               LastAuthenticated = x.LastAuthentication
+                                               LastAuthenticated = x.LastAuthentication,
+                                               LastSeen = x.LastSeen
                                            })
                                            .PageAsync(message, new Result());
 

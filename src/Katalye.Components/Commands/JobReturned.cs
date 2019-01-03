@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using JetBrains.Annotations;
-using Katalye.Components.Exceptions;
 using Katalye.Data;
 using Katalye.Data.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
@@ -50,7 +47,7 @@ namespace Katalye.Components.Commands
             public DateTimeOffset Timestamp { get; set; }
 
             [JsonProperty("fun")]
-            public string Fun { get; set; }
+            public string Function { get; set; }
 
             [JsonProperty("id")]
             public string Id { get; set; }
@@ -67,11 +64,13 @@ namespace Katalye.Components.Commands
 
             private readonly KatalyeContext _context;
             private readonly IBackgroundJobClient _jobClient;
+            private readonly IMediator _mediator;
 
-            public Handler(KatalyeContext context, IBackgroundJobClient jobClient)
+            public Handler(KatalyeContext context, IBackgroundJobClient jobClient, IMediator mediator)
             {
                 _context = context;
                 _jobClient = jobClient;
+                _mediator = mediator;
             }
 
             public Task<Result> Handle(Command message, CancellationToken cancellationToken)
@@ -86,37 +85,25 @@ namespace Katalye.Components.Commands
             [UsedImplicitly]
             public async Task ProcessEvent(Command message)
             {
+                Logger.Trace($"Processing job created event for jid {message.Jid}.");
+
+                var minion = await _mediator.Send(new MinionSeen.Command
+                {
+                    Slug = message.MinionSlug
+                });
+                var job = await _mediator.Send(new JobSeen.Command
+                {
+                    Jid = message.Jid,
+                    Function = message.Data.Function,
+                    Arguments = message.Data.FunctionArguments
+                });
+
                 using (var unit = await _context.Database.BeginTransactionAsync())
                 {
-                    var minion = await _context.Minions
-                                               .Where(x => x.MinionSlug == message.MinionSlug)
-                                               .SingleOrDefaultAsync();
-
-                    if (minion == null)
-                    {
-                        Logger.Info($"Minion called {message.MinionSlug} does not exist, delaying event processing until minion re-authenicates.");
-                        throw new MinionUnknownException(message.MinionSlug);
-                    }
-
-                    var job = await _context.Jobs.SingleOrDefaultAsync(x => x.Jid == message.Jid);
-                    var jobExists = job != null;
-
-                    if (!jobExists)
-                    {
-                        job = new Job
-                        {
-                            Arguments = message.Data.FunctionArguments,
-                            Function = message.Data.Fun,
-                            Jid = message.Jid
-                        };
-                        _context.Jobs.Add(job);
-                        await _context.SaveChangesAsync();
-                    }
-
                     var returnEvent = new MinionReturnEvent
                     {
-                        MinionId = minion.Id,
-                        JobId = job.Id,
+                        MinionId = minion.MinionId,
+                        JobId = job.JobId,
                         ReturnCode = message.Data.ReturnCode,
                         Success = message.Data.Success,
                         Timestamp = message.Data.Timestamp,
