@@ -9,9 +9,21 @@ namespace Katalye.Components
     public static class PaginationHelper
     {
         public static async Task<TResultContainer> PageAsync<TResult, TResultContainer>(this IQueryable<TResult> queryable, IPaginatedQuery query,
-                                                                                            TResultContainer resultContainer)
+                                                                                        TResultContainer resultContainer)
             where TResultContainer : PagedResult<TResult>
         {
+            var result = await queryable.PageAsync(query.Page ?? 1, query.Size ?? 10);
+            resultContainer.Count = result.Count;
+            resultContainer.Size = result.Size;
+            resultContainer.Page = result.Page;
+            resultContainer.Result = result.Result;
+            return resultContainer;
+        }
+
+        public static async Task<TResultContainer> PageAsync<TResult, TResultContainer>(this IQueryable<TResult> queryable, IPaginatedQuery query)
+            where TResultContainer : PagedResult<TResult>, new()
+        {
+            var resultContainer = new TResultContainer();
             var result = await queryable.PageAsync(query.Page ?? 1, query.Size ?? 10);
             resultContainer.Count = result.Count;
             resultContainer.Size = result.Size;

@@ -33,5 +33,24 @@ namespace Katalye.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("{Id}/jobs")]
+        public async Task<IActionResult> GetMinionJobs(GetMinionJobs.Query query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("{Id}/jobs/{Jid}")]
+        public async Task<IActionResult> GetMinionJob(GetMinionJobByJid.Query query)
+        {
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
     }
 }
