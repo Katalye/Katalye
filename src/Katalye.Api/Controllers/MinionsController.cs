@@ -21,5 +21,17 @@ namespace Katalye.Api.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> GetMinion(GetMinionBySlug.Query query)
+        {
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
     }
 }
