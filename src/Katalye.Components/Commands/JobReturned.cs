@@ -89,7 +89,8 @@ namespace Katalye.Components.Commands
 
                 var minion = await _mediator.Send(new MinionSeen.Command
                 {
-                    Slug = message.MinionSlug
+                    Slug = message.MinionSlug,
+                    Timestamp = message.Data.Timestamp
                 });
                 var job = await _mediator.Send(new JobSeen.Command
                 {
