@@ -39,7 +39,7 @@ namespace Katalye.Api.Controllers.Exporters
                 Jid = jid,
                 MinionSlug = minionId
             });
-            
+
             return Ok(result);
         }
 

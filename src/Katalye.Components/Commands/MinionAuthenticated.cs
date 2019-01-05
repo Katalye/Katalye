@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
@@ -71,6 +73,9 @@ namespace Katalye.Components.Commands
                     Timestamp = message.Timestamp
                 });
 
+                var publicKeyHash = GetPublicKeyFingerprint(message.PublicKey);
+                Logger.Debug($"Found public key fingerprint to be {publicKeyHash}.");
+
                 using (var unit = await _context.Database.BeginTransactionAsync())
                 {
                     var minion = await _context.Minions.FindAsync(minionSeenResult.MinionId);
@@ -81,6 +86,7 @@ namespace Katalye.Components.Commands
                         MinionId = minion.Id,
                         Action = message.Action,
                         PublicKey = message.PublicKey,
+                        PublicKeyHash = publicKeyHash,
                         Success = message.Success,
                         Timestamp = message.Timestamp
                     };
@@ -91,6 +97,29 @@ namespace Katalye.Components.Commands
                 }
 
                 Logger.Info("Processing authentication event for minion completed.");
+            }
+
+            private static string GetPublicKeyFingerprint(string text)
+            {
+                if (string.IsNullOrEmpty(text))
+                {
+                    return string.Empty;
+                }
+
+                var normalizedText = text.Replace("\r\n", "\n");
+
+                var start = "-----BEGIN PUBLIC KEY-----\n".Length;
+                var end = "-----END PUBLIC KEY-----".Length;
+
+                var body = normalizedText.Substring(start, normalizedText.Length - start - end);
+
+                using (var sha = new SHA256Managed())
+                {
+                    var textData = Encoding.UTF8.GetBytes(body);
+                    var hash = sha.ComputeHash(textData);
+                    var normalizedHash = BitConverter.ToString(hash).Replace('-', ':');
+                    return normalizedHash;
+                }
             }
         }
     }

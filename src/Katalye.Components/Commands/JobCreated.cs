@@ -30,8 +30,7 @@ namespace Katalye.Components.Commands
             [JsonProperty("jid")]
             public string Jid { get; set; }
 
-            [JsonProperty("tgt")]
-            [JsonConverter(typeof(SingleOrArrayConverter<string>))]
+            [JsonProperty("tgt"), JsonConverter(typeof(SingleOrArrayConverter<string>))]
             public List<string> Target { get; set; }
 
             [JsonProperty("_stamp"), JsonConverter(typeof(UtcTimeConverter))]

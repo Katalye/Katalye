@@ -27,7 +27,7 @@ namespace Katalye.Data
         public KatalyeContext(DbContextOptions<KatalyeContext> options) : base(options)
         {
         }
-        
+
         public KatalyeContext(string connectionString) : this(new DbContextOptionsBuilder<KatalyeContext>()
                                                               .UseNpgsql(connectionString).Options)
         {
@@ -74,6 +74,9 @@ namespace Katalye.Data
             modelBuilder.Entity<JobCreationEvent>()
                         .HasIndex(x => x.JobId)
                         .IsUnique();
+
+            modelBuilder.Entity<MinionAuthenticationEvent>()
+                        .HasIndex(x => x.PublicKeyHash);
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())

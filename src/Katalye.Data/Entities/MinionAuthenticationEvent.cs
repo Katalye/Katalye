@@ -23,6 +23,9 @@ namespace Katalye.Data.Entities
         [Required]
         public string PublicKey { get; set; }
 
+        [Required]
+        public string PublicKeyHash { get; set; }
+
         public bool Success { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }

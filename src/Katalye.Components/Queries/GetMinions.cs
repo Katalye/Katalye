@@ -25,6 +25,7 @@ namespace Katalye.Components.Queries
             public string Id { get; set; }
 
             public DateTimeOffset? LastAuthenticated { get; set; }
+
             public DateTimeOffset? LastSeen { get; set; }
         }
 
