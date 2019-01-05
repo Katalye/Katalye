@@ -34,8 +34,8 @@ namespace Katalye.Components.Commands
             [JsonConverter(typeof(SingleOrArrayConverter<string>))]
             public List<string> Target { get; set; }
 
-            [JsonProperty("_stamp")]
-            public DateTimeOffset Timestamp { get; set; }
+            [JsonProperty("_stamp"), JsonConverter(typeof(UtcTimeConverter))]
+            public DateTime Timestamp { get; set; }
 
             [JsonProperty("user")]
             public string User { get; set; }

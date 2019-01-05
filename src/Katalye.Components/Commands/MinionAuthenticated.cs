@@ -15,8 +15,8 @@ namespace Katalye.Components.Commands
     {
         public class Command : IRequest<Result>
         {
-            [JsonProperty("_stamp")]
-            public DateTimeOffset Timestamp { get; set; }
+            [JsonProperty("_stamp"), JsonConverter(typeof(UtcTimeConverter))]
+            public DateTime Timestamp { get; set; }
 
             [JsonProperty("act")]
             public string Action { get; set; }

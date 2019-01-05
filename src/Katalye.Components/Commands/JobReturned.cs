@@ -43,8 +43,8 @@ namespace Katalye.Components.Commands
             [JsonProperty("cmd")]
             public string Cmd { get; set; }
 
-            [JsonProperty("_stamp")]
-            public DateTimeOffset Timestamp { get; set; }
+            [JsonProperty("_stamp"), JsonConverter(typeof(UtcTimeConverter))]
+            public DateTime Timestamp { get; set; }
 
             [JsonProperty("fun")]
             public string Function { get; set; }
