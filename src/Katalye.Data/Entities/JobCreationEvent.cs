@@ -16,7 +16,7 @@ namespace Katalye.Data.Entities
         [ForeignKey(nameof(JobId))]
         public Job Job { get; set; }
 
-        public DateTimeOffset TimeStamp { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
 
         [Required]
         public string User { get; set; }

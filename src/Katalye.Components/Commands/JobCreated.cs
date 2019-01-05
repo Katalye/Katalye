@@ -35,7 +35,7 @@ namespace Katalye.Components.Commands
             public List<string> Target { get; set; }
 
             [JsonProperty("_stamp")]
-            public DateTimeOffset TimeStamp { get; set; }
+            public DateTimeOffset Timestamp { get; set; }
 
             [JsonProperty("user")]
             public string User { get; set; }
@@ -104,7 +104,7 @@ namespace Katalye.Components.Commands
                         Targets = message.Data.Target,
                         TargetType = message.Data.TargetType,
                         User = message.Data.User,
-                        TimeStamp = message.Data.TimeStamp
+                        Timestamp = message.Data.Timestamp
                     };
                     _context.JobCreationEvents.Add(creationEvent);
                     await _context.SaveChangesAsync();
