@@ -17,6 +17,7 @@ namespace Katalye.Components
             resultContainer.Size = result.Size;
             resultContainer.Page = result.Page;
             resultContainer.Result = result.Result;
+            resultContainer.Pages = result.Pages;
             return resultContainer;
         }
 
@@ -29,6 +30,7 @@ namespace Katalye.Components
             resultContainer.Size = result.Size;
             resultContainer.Page = result.Page;
             resultContainer.Result = result.Result;
+            resultContainer.Pages = result.Pages;
             return resultContainer;
         }
 
@@ -41,6 +43,7 @@ namespace Katalye.Components
             var takeCount = normalizedSize;
 
             var count = await queryable.CountAsync();
+            var pages = (int) Math.Ceiling((double) count / size);
             var result = await queryable.Skip(skipCount)
                                         .Take(takeCount)
                                         .ToListAsync();
@@ -50,7 +53,8 @@ namespace Katalye.Components
                 Count = count,
                 Page = normalizedPage + 1,
                 Size = normalizedSize,
-                Result = result
+                Result = result,
+                Pages = pages
             };
         }
     }
@@ -69,6 +73,8 @@ namespace Katalye.Components
         public int Size { get; set; }
 
         public int Count { get; set; }
+
+        public int Pages { get; set; }
 
         public IList<T> Result { get; set; }
     }
