@@ -15,6 +15,10 @@ namespace Katalye.Data.Entities
 
         public DateTimeOffset? LastSeen { get; set; }
 
+        public DateTimeOffset? LastGrainRefresh { get; set; }
+
+        public Guid? GrainGeneration { get; set; }
+
         public int Version { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }

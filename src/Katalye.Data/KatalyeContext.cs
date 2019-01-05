@@ -37,7 +37,7 @@ namespace Katalye.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Job>()
-                        .HasIndex(p => new {p.Jid})
+                        .HasIndex(p => new { p.Jid })
                         .IsUnique();
             modelBuilder.Entity<Job>()
                         .Property(x => x.Arguments)
@@ -65,18 +65,24 @@ namespace Katalye.Data
 
             modelBuilder.Entity<Minion>()
                         .HasIndex(x => x.MinionSlug)
+                        .IsUnique();          
+            modelBuilder.Entity<Minion>()
+                        .HasIndex(x => x.GrainGeneration)
                         .IsUnique();
 
             modelBuilder.Entity<MinionReturnEvent>()
                         .HasIndex(nameof(MinionReturnEvent.MinionId), nameof(MinionReturnEvent.JobId))
                         .IsUnique();
-
             modelBuilder.Entity<JobCreationEvent>()
                         .HasIndex(x => x.JobId)
                         .IsUnique();
 
             modelBuilder.Entity<MinionAuthenticationEvent>()
                         .HasIndex(x => x.PublicKeyHash);
+
+            modelBuilder.Entity<MinionGrain>()
+                        .HasIndex(nameof(MinionGrain.MinionId), nameof(MinionGrain.Generation), nameof(MinionGrain.Path))
+                        .IsUnique();
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
