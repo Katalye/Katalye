@@ -30,7 +30,7 @@ namespace Katalye.Components.Queries
 
             public JArray Arguments { get; set; }
 
-            public JObject ReturnData { get; set; }
+            public JToken ReturnData { get; set; }
 
             public bool Success { get; set; }
 

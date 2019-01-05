@@ -32,7 +32,7 @@ namespace Katalye.Components.Commands
             public string Jid { get; set; }
 
             [JsonProperty("return")]
-            public JObject Return { get; set; }
+            public JToken Return { get; set; }
 
             [JsonProperty("retcode")]
             public long ReturnCode { get; set; }

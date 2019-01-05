@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Katalye.Data", "src\Katalye
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Katalye.Host", "src\Katalye.Host\Katalye.Host.csproj", "{060C0326-C97E-4BA6-94DA-D0046FDFFF63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Components", "src\Katalye.Components\Katalye.Components.csproj", "{52D7004D-C54E-49F5-B5E0-A8B327FE8835}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Katalye.Components", "src\Katalye.Components\Katalye.Components.csproj", "{52D7004D-C54E-49F5-B5E0-A8B327FE8835}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AC476E5D-00D9-4FC0-9479-737776A2C815}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Katalye.Components.Tests", "tests\Katalye.Components.Tests\Katalye.Components.Tests.csproj", "{926DF9A1-C668-43CC-8616-0571D1FE1258}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{52D7004D-C54E-49F5-B5E0-A8B327FE8835}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52D7004D-C54E-49F5-B5E0-A8B327FE8835}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52D7004D-C54E-49F5-B5E0-A8B327FE8835}.Release|Any CPU.Build.0 = Release|Any CPU
+		{926DF9A1-C668-43CC-8616-0571D1FE1258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{926DF9A1-C668-43CC-8616-0571D1FE1258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{926DF9A1-C668-43CC-8616-0571D1FE1258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{926DF9A1-C668-43CC-8616-0571D1FE1258}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{926DF9A1-C668-43CC-8616-0571D1FE1258} = {AC476E5D-00D9-4FC0-9479-737776A2C815}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21E6D556-C3C0-4260-87F6-7E2F2134A3CD}

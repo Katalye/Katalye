@@ -17,7 +17,7 @@ namespace Katalye.Api.Controllers.Exporters
         }
 
         [HttpPost("{*tag}", Order = 99)]
-        public async Task<IActionResult> Default([FromRoute] string tag, [FromBody] JObject data)
+        public async Task<IActionResult> Default([FromRoute] string tag, [FromBody] JToken data)
         {
             await _mediator.Send(new UnknownEventRecieved.Command
             {

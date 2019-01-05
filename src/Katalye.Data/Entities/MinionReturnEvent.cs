@@ -23,7 +23,7 @@ namespace Katalye.Data.Entities
         public Job Job { get; set; }
 
         [NotMapped]
-        public JObject ReturnData { get; set; }
+        public JToken ReturnData { get; set; }
 
         public bool Success { get; set; }
 

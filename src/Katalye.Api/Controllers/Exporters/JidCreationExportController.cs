@@ -12,7 +12,7 @@ namespace Katalye.Api.Controllers.Exporters
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         [HttpPost("{id:regex(\\d{{20}})}")]
-        public IActionResult JidCreated([FromRoute] string jid, [FromBody] JObject data)
+        public IActionResult JidCreated([FromRoute] string jid, [FromBody] JToken data)
         {
             Logger.Info($"Got jid creation event for {jid}. {data}");
             return Ok();

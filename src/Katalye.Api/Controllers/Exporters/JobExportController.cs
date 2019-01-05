@@ -44,7 +44,7 @@ namespace Katalye.Api.Controllers.Exporters
         }
 
         [HttpPost("prog/{minionId}/{runNumber}")]
-        public IActionResult ProgressEvent([FromRoute] string jid, [FromRoute] string minionId, [FromRoute] int runNumber, [FromBody] JObject data)
+        public IActionResult ProgressEvent([FromRoute] string jid, [FromRoute] string minionId, [FromRoute] int runNumber, [FromBody] JToken data)
         {
             Logger.Info($"Progress update from {minionId} for job with jid {jid} occurred. {data}");
             return Ok();

@@ -52,7 +52,7 @@ namespace Katalye.Data
                         .IsRequired()
                         .HasConversion(
                             obj => obj.ToString(),
-                            s => JObject.Parse(s)
+                            s => JToken.Parse(s)
                         );
 
             modelBuilder.Entity<UnknownEvent>()
@@ -60,7 +60,7 @@ namespace Katalye.Data
                         .IsRequired()
                         .HasConversion(
                             obj => obj.ToString(),
-                            s => JObject.Parse(s)
+                            s => JToken.Parse(s)
                         );
 
             modelBuilder.Entity<Minion>()

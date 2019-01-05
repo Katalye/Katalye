@@ -14,7 +14,7 @@ namespace Katalye.Data.Entities
         public string Tag { get; set; }
 
         [NotMapped]
-        public JObject Data { get; set; }
+        public JToken Data { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }
         public DateTimeOffset ModifiedOn { get; set; }

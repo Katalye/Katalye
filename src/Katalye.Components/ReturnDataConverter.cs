@@ -15,13 +15,33 @@ namespace Katalye.Components
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            //var token = JToken.Load(reader);
-            //if (token.Type == JTokenType.Array)
-            //{
-            //    return token.ToObject<List<T>>();
-            //}
+            var token = JToken.Load(reader);
 
-            //return new List<T> { token.ToObject<T>() };
+            var returnType = ReturnType.Unknown;
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    returnType = ReturnType.Dictionary;
+                    break;
+                case JTokenType.Array:
+                    returnType = ReturnType.List;
+                    break;
+                case JTokenType.Integer:
+                case JTokenType.Float:
+                    returnType = ReturnType.Number;
+                    break;
+                case JTokenType.String:
+                    returnType = ReturnType.String;
+                    break;
+                case JTokenType.Boolean:
+                    returnType = ReturnType.Boolean;
+                    break;
+            }
+
+            if (token.Type == JTokenType.Array)
+            {
+                //return token.ToObject<List<T>>();
+            }
 
             throw new NotImplementedException();
         }
@@ -32,15 +52,16 @@ namespace Katalye.Components
         }
     }
 
-    public interface IReturnData
+    public class ReturnData
     {
-        ReturnType Type { get; set; }
+        public ReturnType Type { get; set; }
 
-        JObject Data { get; set; }
+        public JObject Data { get; set; }
     }
 
     public enum ReturnType
     {
+        Unknown,
         Boolean,
         String,
         Number,

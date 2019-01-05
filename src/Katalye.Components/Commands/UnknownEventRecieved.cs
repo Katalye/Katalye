@@ -15,7 +15,7 @@ namespace Katalye.Components.Commands
         {
             public string Tag { get; set; }
 
-            public JObject Data { get; set; }
+            public JToken Data { get; set; }
         }
 
         public class Result
