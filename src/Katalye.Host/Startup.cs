@@ -43,6 +43,7 @@ namespace Katalye.Host
 
             services.IncludeRegistry<MediatrRegistry>();
             services.IncludeRegistry<KatalyeRegistry>();
+            services.IncludeRegistry<RestEaseRegistry>();
         }
 
         [UsedImplicitly]
