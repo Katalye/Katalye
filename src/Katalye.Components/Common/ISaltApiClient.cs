@@ -9,10 +9,10 @@ namespace Katalye.Components.Common
     public interface ISaltApiClient
     {
         [Post("run")]
-        Task<CreateJobResult> CreateJob([Body] CreateJob createJob);
+        Task<CreateJobResult> CreateJob([Body] CreateJobRequest createJobRequest);
     }
 
-    public class CreateJob
+    public class CreateJobRequest
     {
         [JsonProperty("client")]
         public JobClient Client { get; set; }
@@ -26,6 +26,9 @@ namespace Katalye.Components.Common
         [JsonProperty("fun")]
         public string Function { get; set; }
 
+        [JsonProperty("arg")]
+        public IList<string> Arguments { get; set; }
+
         [JsonProperty("username")]
         public string Username { get; set; }
 
@@ -33,7 +36,7 @@ namespace Katalye.Components.Common
         public string Password { get; set; }
 
         [JsonProperty("eauth")]
-        public string ExternalAuth { get; set; }
+        public JobExternalAuth ExternalAuth { get; set; }
     }
 
     public class CreateJobResult
