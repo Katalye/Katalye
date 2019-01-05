@@ -27,6 +27,12 @@ namespace Katalye.Data
         public KatalyeContext(DbContextOptions<KatalyeContext> options) : base(options)
         {
         }
+        
+        public KatalyeContext(string connectionString) : this(new DbContextOptionsBuilder<KatalyeContext>()
+                                                              .UseNpgsql(connectionString).Options)
+        {
+            // Hard coded for LinqPad.
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
