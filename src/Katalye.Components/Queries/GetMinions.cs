@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Katalye.Components.Queries
         {
             public int? Page { get; set; }
             public int? Size { get; set; }
+
+            public Dictionary<string, string> GrainSearch { get; set; }
         }
 
         public class Result : PagedResult<Minion>
@@ -23,6 +26,14 @@ namespace Katalye.Components.Queries
         public class Minion
         {
             public string Id { get; set; }
+
+            public IList<string> Os { get; set; }
+
+            public IList<string> Master { get; set; }
+
+            public IList<string> SaltMinionVersion { get; set; }
+
+            public IList<string> IpV4Addresses { get; set; }
 
             public DateTimeOffset? LastAuthenticated { get; set; }
 
@@ -41,15 +52,23 @@ namespace Katalye.Components.Queries
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                var result = await _context.Minions
-                                           .OrderBy(x => x.MinionSlug)
-                                           .Select(x => new Minion
-                                           {
-                                               Id = x.MinionSlug,
-                                               LastAuthenticated = x.LastAuthentication,
-                                               LastSeen = x.LastSeen
-                                           })
-                                           .PageAsync(message, new Result());
+                var result = await (from minion in _context.Minions
+                                    let grains = _context.MinionGrains.Where(x => x.MinionId == minion.Id && x.Generation == minion.GrainGeneration)
+                                    from os in grains.Where(x => x.Path == "os").DefaultIfEmpty()
+                                    from master in grains.Where(x => x.Path == "master").DefaultIfEmpty()
+                                    from version in grains.Where(x => x.Path == "saltversioninfo").DefaultIfEmpty()
+                                    from ipv4Addresses in grains.Where(x => x.Path == "ipv4").DefaultIfEmpty()
+                                    orderby minion.MinionSlug
+                                    select new Minion
+                                    {
+                                        Id = minion.MinionSlug,
+                                        LastAuthenticated = minion.LastAuthentication,
+                                        LastSeen = minion.LastSeen,
+                                        IpV4Addresses = ipv4Addresses.Values,
+                                        Master = master.Values,
+                                        Os = os.Values,
+                                        SaltMinionVersion = version.Values
+                                    }).PageAsync(message, new Result());
 
                 return result;
             }
