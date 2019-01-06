@@ -48,20 +48,27 @@ namespace Katalye.Components.Commands
                                             .Select(x => x.MinionSlug)
                                             .ToListAsync(cancellationToken);
 
-                var targetList = string.Join(",", minions);
-
-                Logger.Info($"Requesting refreshes for {minions} minions.");
-
-                var result = await _mediator.Send(new CreateJob.Command
+                if (minions.Any())
                 {
-                    Client = JobClient.LocalAsync,
-                    Function = "grains.items",
-                    Target = targetList,
-                    Username = _configuration.SaltApiServiceUsername,
-                    Password = _configuration.SaltApiServicePassword
-                }, cancellationToken);
+                    var targetList = string.Join(",", minions);
 
-                Logger.Info($"Salt job {result.Jid} created.");
+                    Logger.Info($"Requesting refreshes for {minions} minions.");
+
+                    var result = await _mediator.Send(new CreateJob.Command
+                    {
+                        Client = JobClient.LocalAsync,
+                        Function = "grains.items",
+                        Target = targetList,
+                        Username = _configuration.SaltApiServiceUsername,
+                        Password = _configuration.SaltApiServicePassword
+                    }, cancellationToken);
+
+                    Logger.Info($"Salt job {result.Jid} created.");
+                }
+                else
+                {
+                    Logger.Info("No minions require a grain refresh.");
+                }
 
                 return new Result();
             }
