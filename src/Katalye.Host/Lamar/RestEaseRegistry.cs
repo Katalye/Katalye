@@ -1,6 +1,6 @@
-﻿using Katalye.Components.Common;
+﻿using Katalye.Components;
+using Katalye.Components.Common;
 using Lamar;
-using Microsoft.Extensions.Configuration;
 using RestEase;
 
 namespace Katalye.Host.Lamar
@@ -11,8 +11,8 @@ namespace Katalye.Host.Lamar
         {
             For<ISaltApiClient>().Use(x =>
                                  {
-                                     var configuration = x.GetInstance<IConfiguration>();
-                                     var saltMasterServer = configuration["Katalye:Salt:Api"];
+                                     var configuration = x.GetInstance<IKatalyeConfiguration>();
+                                     var saltMasterServer = configuration.SaltApiServer;
                                      return RestClient.For<ISaltApiClient>(saltMasterServer);
                                  })
                                  .Singleton();
