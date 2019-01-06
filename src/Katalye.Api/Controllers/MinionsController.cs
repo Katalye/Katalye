@@ -29,6 +29,13 @@ namespace Katalye.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("_search-grain-values")]
+        public async Task<IActionResult> GetMinionSearchGrainValues(GetSearchGrainValues.Query query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetMinion(GetMinionBySlug.Query query)
         {
