@@ -47,7 +47,7 @@ namespace Katalye.Components.Notifications.Handlers
 
             using (var unit = await _context.Database.BeginTransactionAsync())
             {
-                var bulk = await (from returnEvent in _context.MinionReturnEvents
+                var bulk = await (from returnEvent in _context.MinionReturnEvents.Where(x => x.Id == notification.MinionReturnEventId)
                                   let m = returnEvent.Minion
                                   select new
                                   {
@@ -83,7 +83,7 @@ namespace Katalye.Components.Notifications.Handlers
                     Timestamp = bulk.ReturnEvent.Timestamp
                 });
 
-                _context.AddRange(minionGrains);
+                _context.MinionGrains.AddRange(minionGrains);
                 minion.Version = bulk.MinionVersion;
                 minion.GrainGeneration = generation;
                 minion.LastGrainRefresh = bulk.ReturnEvent.Timestamp;

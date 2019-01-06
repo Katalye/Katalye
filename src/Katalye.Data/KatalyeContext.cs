@@ -24,6 +24,8 @@ namespace Katalye.Data
 
         public DbSet<MinionAuthenticationEvent> MinionAuthenticationEvents { get; set; }
 
+        public DbSet<MinionGrain> MinionGrains { get; set; }
+
         public KatalyeContext(DbContextOptions<KatalyeContext> options) : base(options)
         {
         }
@@ -37,7 +39,7 @@ namespace Katalye.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Job>()
-                        .HasIndex(p => new { p.Jid })
+                        .HasIndex(p => new {p.Jid})
                         .IsUnique();
             modelBuilder.Entity<Job>()
                         .Property(x => x.Arguments)
@@ -65,7 +67,7 @@ namespace Katalye.Data
 
             modelBuilder.Entity<Minion>()
                         .HasIndex(x => x.MinionSlug)
-                        .IsUnique();          
+                        .IsUnique();
             modelBuilder.Entity<Minion>()
                         .HasIndex(x => x.GrainGeneration)
                         .IsUnique();
