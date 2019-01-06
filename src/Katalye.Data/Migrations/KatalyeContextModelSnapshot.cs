@@ -181,6 +181,24 @@ namespace Katalye.Data.Migrations
                     b.ToTable("MinionGrains");
                 });
 
+            modelBuilder.Entity("Katalye.Data.Entities.MinionGrainValue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("MinionGrainId")
+                        .IsRequired();
+
+                    b.Property<string>("Value")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MinionGrainId");
+
+                    b.ToTable("MinionGrainValues");
+                });
+
             modelBuilder.Entity("Katalye.Data.Entities.MinionReturnEvent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -256,6 +274,14 @@ namespace Katalye.Data.Migrations
                     b.HasOne("Katalye.Data.Entities.Minion", "Minion")
                         .WithMany()
                         .HasForeignKey("MinionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Katalye.Data.Entities.MinionGrainValue", b =>
+                {
+                    b.HasOne("Katalye.Data.Entities.MinionGrain", "MinionGrain")
+                        .WithMany()
+                        .HasForeignKey("MinionGrainId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

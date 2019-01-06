@@ -26,6 +26,8 @@ namespace Katalye.Data
 
         public DbSet<MinionGrain> MinionGrains { get; set; }
 
+        public DbSet<MinionGrainValue> MinionGrainValues { get; set; }
+
         public KatalyeContext(DbContextOptions<KatalyeContext> options) : base(options)
         {
         }

@@ -13,6 +13,14 @@
     <Compile Remove="Migrations\20190102025929_V1.cs" />
     <Compile Remove="Migrations\20190102035043_V2.cs" />
     <Compile Remove="Migrations\20190102035245_V1.cs" />
+    <Compile Remove="Migrations\20190102041535_V1.cs" />
+    <Compile Remove="Migrations\20190103010247_V2.cs" />
+    <Compile Remove="Migrations\20190105000009_V3.cs" />
+    <Compile Remove="Migrations\20190105081636_V4.cs" />
+    <Compile Remove="Migrations\20190105222407_V5.cs" />
+    <Compile Remove="Migrations\20190105235949_V6.cs" />
+    <Compile Remove="Migrations\20190106042507_V1.cs" />
+    <Compile Remove="Migrations\20190106042803_V1.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />

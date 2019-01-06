@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Katalye.Data.Migrations
 {
     [DbContext(typeof(KatalyeContext))]
-    [Migration("20190102041535_V1")]
+    [Migration("20190106044307_V1")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,7 +72,7 @@ namespace Katalye.Data.Migrations
 
                     b.Property<List<string>>("Targets");
 
-                    b.Property<DateTimeOffset>("TimeStamp");
+                    b.Property<DateTimeOffset>("Timestamp");
 
                     b.Property<string>("User")
                         .IsRequired();
@@ -92,7 +92,13 @@ namespace Katalye.Data.Migrations
 
                     b.Property<DateTimeOffset>("CreatedOn");
 
+                    b.Property<Guid?>("GrainGeneration");
+
                     b.Property<DateTimeOffset?>("LastAuthentication");
+
+                    b.Property<DateTimeOffset?>("LastGrainRefresh");
+
+                    b.Property<DateTimeOffset?>("LastSeen");
 
                     b.Property<string>("MinionSlug")
                         .IsRequired();
@@ -102,6 +108,9 @@ namespace Katalye.Data.Migrations
                     b.Property<int>("Version");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GrainGeneration")
+                        .IsUnique();
 
                     b.HasIndex("MinionSlug")
                         .IsUnique();
@@ -127,6 +136,9 @@ namespace Katalye.Data.Migrations
                     b.Property<string>("PublicKey")
                         .IsRequired();
 
+                    b.Property<string>("PublicKeyHash")
+                        .IsRequired();
+
                     b.Property<bool>("Success");
 
                     b.Property<DateTimeOffset>("Timestamp");
@@ -135,7 +147,58 @@ namespace Katalye.Data.Migrations
 
                     b.HasIndex("MinionId");
 
+                    b.HasIndex("PublicKeyHash");
+
                     b.ToTable("MinionAuthenticationEvents");
+                });
+
+            modelBuilder.Entity("Katalye.Data.Entities.MinionGrain", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset>("CreatedOn");
+
+                    b.Property<Guid?>("Generation")
+                        .IsRequired();
+
+                    b.Property<Guid?>("MinionId")
+                        .IsRequired();
+
+                    b.Property<DateTimeOffset>("ModifiedOn");
+
+                    b.Property<string>("Path")
+                        .IsRequired();
+
+                    b.Property<DateTimeOffset>("Timestamp");
+
+                    b.Property<List<string>>("Values")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MinionId", "Generation", "Path")
+                        .IsUnique();
+
+                    b.ToTable("MinionGrains");
+                });
+
+            modelBuilder.Entity("Katalye.Data.Entities.MinionGrainValue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("MinionGrainId")
+                        .IsRequired();
+
+                    b.Property<string>("Value")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MinionGrainId");
+
+                    b.ToTable("MinionGrainValues");
                 });
 
             modelBuilder.Entity("Katalye.Data.Entities.MinionReturnEvent", b =>
@@ -205,6 +268,22 @@ namespace Katalye.Data.Migrations
                     b.HasOne("Katalye.Data.Entities.Minion", "Minion")
                         .WithMany()
                         .HasForeignKey("MinionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Katalye.Data.Entities.MinionGrain", b =>
+                {
+                    b.HasOne("Katalye.Data.Entities.Minion", "Minion")
+                        .WithMany()
+                        .HasForeignKey("MinionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Katalye.Data.Entities.MinionGrainValue", b =>
+                {
+                    b.HasOne("Katalye.Data.Entities.MinionGrain", "MinionGrain")
+                        .WithMany()
+                        .HasForeignKey("MinionGrainId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

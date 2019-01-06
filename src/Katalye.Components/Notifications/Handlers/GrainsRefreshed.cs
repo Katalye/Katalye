@@ -81,9 +81,18 @@ namespace Katalye.Components.Notifications.Handlers
                     Path = x.Key,
                     Values = x.Value.ToList(),
                     Timestamp = bulk.ReturnEvent.Timestamp
-                });
+                }).ToList();
+
+                var minionGrainValues = minionGrains.Select(
+                    g => g.Values.Select(x => new MinionGrainValue
+                    {
+                        MinionGrain = g,
+                        Value = x
+                    })
+                ).SelectMany(x => x);
 
                 _context.MinionGrains.AddRange(minionGrains);
+                _context.MinionGrainValues.AddRange(minionGrainValues);
                 minion.Version = bulk.MinionVersion;
                 minion.GrainGeneration = generation;
                 minion.LastGrainRefresh = bulk.ReturnEvent.Timestamp;
