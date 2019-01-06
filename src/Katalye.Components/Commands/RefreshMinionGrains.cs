@@ -42,9 +42,9 @@ namespace Katalye.Components.Commands
             {
                 Logger.Info($"Minion grain refresh in-progress, locating grain data that is older than {message.Age}.");
 
-                var now = DateTimeOffset.Now;
+                var cutoff = DateTimeOffset.Now - message.Age;
                 var minions = await _context.Minions
-                                            .Where(x => x.LastGrainRefresh == null || x.LastGrainRefresh < now)
+                                            .Where(x => x.LastGrainRefresh == null || x.LastGrainRefresh < cutoff)
                                             .Select(x => x.MinionSlug)
                                             .ToListAsync(cancellationToken);
 
