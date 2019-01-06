@@ -1,8 +1,10 @@
-﻿using Hangfire;
+﻿using System.Linq;
+using Hangfire;
 using Hangfire.Common;
 using Hangfire.PostgreSql;
 using JetBrains.Annotations;
 using Katalye.Api.Controllers;
+using Katalye.Components.Processing;
 using Katalye.Data;
 using Katalye.Host.Lamar;
 using Katalye.Host.Middleware;
@@ -61,13 +63,17 @@ namespace Katalye.Host
             }
 
             app.UseMvc();
+
+            var processingServers = app.ApplicationServices
+                                       .GetServices<ProcessingServer>()
+                                       .ToList();
             app.UseHangfireServer(new BackgroundJobServerOptions
             {
                 FilterProvider = new JobFilterCollection
                 {
                     app.ApplicationServices.GetService<HangfireLoggingFilter>()
                 }
-            });
+            }, processingServers);
             app.UseHangfireDashboard();
         }
     }
