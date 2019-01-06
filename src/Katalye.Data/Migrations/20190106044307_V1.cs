@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+// ReSharper disable All
 
 namespace Katalye.Data.Migrations
 {
