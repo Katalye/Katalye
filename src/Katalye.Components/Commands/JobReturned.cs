@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using JetBrains.Annotations;
+using Katalye.Components.Notifications;
 using Katalye.Data;
 using Katalye.Data.Entities;
 using MediatR;
@@ -99,6 +100,7 @@ namespace Katalye.Components.Commands
                     Arguments = message.Data.FunctionArguments
                 });
 
+                Guid returnEventId;
                 using (var unit = await _context.Database.BeginTransactionAsync())
                 {
                     var returnEvent = new MinionReturnEvent
@@ -113,8 +115,16 @@ namespace Katalye.Components.Commands
                     _context.MinionReturnEvents.Add(returnEvent);
                     await _context.SaveChangesAsync();
 
+                    returnEventId = returnEvent.Id;
+
                     unit.Commit();
                 }
+
+                await _mediator.Publish(new JobReturnSaved.Notification
+                {
+                    Function = message.Data.Function,
+                    MinionReturnEventId = returnEventId
+                });
             }
         }
     }
