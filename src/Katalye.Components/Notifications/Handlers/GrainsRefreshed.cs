@@ -92,7 +92,7 @@ namespace Katalye.Components.Notifications.Handlers
 
                 unit.Commit();
 
-                Logger.Debug($"Commited {grains.Count} grains under generation {generation}");
+                Logger.Debug($"Commited {grains.Count} grains under generation {generation}.");
             }
         }
     }
