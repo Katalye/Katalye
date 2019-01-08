@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -25,6 +26,8 @@ namespace Katalye.Components.Queries
             public DateTimeOffset? LastAuthentication { get; set; }
 
             public DateTimeOffset? LastSeen { get; set; }
+
+            public Dictionary<string, ICollection<string>> Grains { get; set; }
         }
 
         [UsedImplicitly]
@@ -39,15 +42,31 @@ namespace Katalye.Components.Queries
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                return await _context.Minions
-                                     .Where(x => x.MinionSlug == message.Id)
-                                     .Select(x => new Result
-                                     {
-                                         Id = x.MinionSlug,
-                                         LastAuthentication = x.LastAuthentication,
-                                         LastSeen = x.LastSeen
-                                     })
-                                     .SingleOrDefaultAsync(cancellationToken);
+                var result = await _context.Minions
+                                           .Where(x => x.MinionSlug == message.Id)
+                                           .Select(x => new Result
+                                           {
+                                               Id = x.MinionSlug,
+                                               LastAuthentication = x.LastAuthentication,
+                                               LastSeen = x.LastSeen
+                                           })
+                                           .SingleOrDefaultAsync(cancellationToken);
+
+                if (result != null)
+                {
+                    var grains = await _context.MinionGrains
+                                               .Where(x => x.Minion.MinionSlug == message.Id)
+                                               .Select(x => new
+                                               {
+                                                   x.Path,
+                                                   x.Values
+                                               })
+                                               .ToListAsync(cancellationToken);
+
+                    result.Grains = grains.ToDictionary(x => x.Path, x => (ICollection<string>)x.Values);
+                }
+
+                return result;
             }
         }
     }
