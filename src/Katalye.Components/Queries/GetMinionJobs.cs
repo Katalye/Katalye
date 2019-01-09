@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Data;
 using MediatR;
+using Newtonsoft.Json.Linq;
 
 namespace Katalye.Components.Queries
 {
@@ -34,6 +36,18 @@ namespace Katalye.Components.Queries
             public bool Success { get; set; }
 
             public DateTimeOffset ReturnedOn { get; set; }
+
+            public JArray Arguments { get; set; }
+
+            public string User { get; set; }
+
+            public IList<string> Targets { get; set; }
+
+            public string TargetType { get; set; }
+
+            public DateTimeOffset? CreatedOn { get; set; }
+
+            public bool CreationEventExists { get; set; }
         }
 
         [UsedImplicitly]
@@ -48,17 +62,25 @@ namespace Katalye.Components.Queries
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                return await _context.MinionReturnEvents
-                                     .Where(x => x.Minion.MinionSlug == message.Id)
-                                     .OrderByDescending(x => x.Timestamp)
-                                     .Select(x => new Model
-                                     {
-                                         Jid = x.Job.Jid,
-                                         Function = x.Job.Function,
-                                         Success = x.Success,
-                                         ReturnedOn = x.Timestamp,
-                                     })
-                                     .PageAsync(message, new Result());
+                var result = await (from returnEvent in _context.MinionReturnEvents.Where(x => x.Minion.MinionSlug == message.Id)
+                                    from creationEvent in _context.JobCreationEvents.Where(x => x.JobId == returnEvent.JobId).DefaultIfEmpty()
+                                    let job = returnEvent.Job
+                                    orderby returnEvent.Timestamp descending
+                                    select new Model
+                                    {
+                                        Jid = job.Jid,
+                                        Function = job.Function,
+                                        Arguments = job.Arguments,
+                                        Success = returnEvent.Success,
+                                        ReturnedOn = returnEvent.Timestamp,
+                                        TargetType = creationEvent.TargetType,
+                                        User = creationEvent.User,
+                                        Targets = creationEvent.Targets,
+                                        CreationEventExists = creationEvent != null,
+                                        CreatedOn = creationEvent.Timestamp
+                                    }).PageAsync(message, new Result());
+
+                return result;
             }
         }
     }

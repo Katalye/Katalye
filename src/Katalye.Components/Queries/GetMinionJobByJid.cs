@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
@@ -35,6 +36,20 @@ namespace Katalye.Components.Queries
             public bool Success { get; set; }
 
             public DateTimeOffset ReturnedOn { get; set; }
+
+            public string TargetType { get; set; }
+
+            public string User { get; set; }
+
+            public List<string> Targets { get; set; }
+
+            public bool CreationEventExists { get; set; }
+
+            public DateTimeOffset? CreatedOn { get; set; }
+
+            public List<string> Minions { get; set; }
+
+            public List<string> MissingMinions { get; set; }
         }
 
         [UsedImplicitly]
@@ -49,18 +64,27 @@ namespace Katalye.Components.Queries
 
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
-                return await _context.MinionReturnEvents
-                                     .Where(x => x.Minion.MinionSlug == message.Id && x.Job.Jid == message.Jid)
-                                     .Select(x => new Result
-                                     {
-                                         Jid = x.Job.Jid,
-                                         Function = x.Job.Function,
-                                         Success = x.Success,
-                                         ReturnedOn = x.Timestamp,
-                                         Arguments = x.Job.Arguments,
-                                         ReturnData = x.ReturnData
-                                     })
-                                     .SingleOrDefaultAsync(cancellationToken);
+                var result = await (from returnEvent in _context.MinionReturnEvents
+                                    from creationEvent in _context.JobCreationEvents.Where(x => x.JobId == returnEvent.JobId).DefaultIfEmpty()
+                                    let job = returnEvent.Job
+                                    where job.Jid == message.Jid && returnEvent.Minion.MinionSlug == message.Id
+                                    select new Result
+                                    {
+                                        Jid = job.Jid,
+                                        Function = job.Function,
+                                        Arguments = job.Arguments,
+                                        Success = returnEvent.Success,
+                                        ReturnedOn = returnEvent.Timestamp,
+                                        TargetType = creationEvent.TargetType,
+                                        User = creationEvent.User,
+                                        Targets = creationEvent.Targets,
+                                        CreationEventExists = creationEvent != null,
+                                        CreatedOn = creationEvent.Timestamp,
+                                        Minions = creationEvent.Minions,
+                                        MissingMinions = creationEvent.MissingMinions,
+                                        ReturnData = returnEvent.ReturnData
+                                    }).SingleOrDefaultAsync(cancellationToken);
+                return result;
             }
         }
     }
