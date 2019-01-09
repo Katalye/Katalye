@@ -56,6 +56,7 @@ namespace Katalye.Components.Queries
                 {
                     var grains = await _context.MinionGrains
                                                .Where(x => x.Minion.MinionSlug == message.Id)
+                                               .Where(x => x.Minion.GrainGeneration == x.Generation)
                                                .Select(x => new
                                                {
                                                    x.Path,
