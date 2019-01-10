@@ -41,14 +41,14 @@ namespace Katalye.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Job>()
-                        .HasIndex(p => new {p.Jid})
+                        .HasIndex(p => new { p.Jid })
                         .IsUnique();
             modelBuilder.Entity<Job>()
                         .Property(x => x.Arguments)
                         .IsRequired()
                         .HasConversion(
                             list => list.ToString(),
-                            s => JArray.Parse(s)
+                            s => ParseJson(s) as JArray
                         );
 
             modelBuilder.Entity<MinionReturnEvent>()
@@ -56,7 +56,7 @@ namespace Katalye.Data
                         .IsRequired()
                         .HasConversion(
                             obj => obj.ToString(),
-                            s => JToken.Parse(s)
+                            s => ParseJson(s)
                         );
 
             modelBuilder.Entity<UnknownEvent>()
@@ -64,7 +64,7 @@ namespace Katalye.Data
                         .IsRequired()
                         .HasConversion(
                             obj => obj.ToString(),
-                            s => JToken.Parse(s)
+                            s => ParseJson(s)
                         );
 
             modelBuilder.Entity<Minion>()
@@ -117,6 +117,31 @@ namespace Katalye.Data
             {
                 entity.Entity.Version += 1;
             }
+        }
+
+        private JToken ParseJson(string json)
+        {
+            if (json == "True")
+            {
+                return JToken.FromObject(true);
+            }
+
+            if (json == "False")
+            {
+                return JToken.FromObject(false);
+            }
+
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return JToken.FromObject("");
+            }
+
+            if (json.StartsWith("[") || json.StartsWith("{"))
+            {
+                return JToken.Parse(json);
+            }
+
+            return JToken.FromObject(json);
         }
     }
 }
