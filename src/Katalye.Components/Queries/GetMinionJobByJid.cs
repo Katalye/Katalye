@@ -50,6 +50,12 @@ namespace Katalye.Components.Queries
             public List<string> Minions { get; set; }
 
             public List<string> MissingMinions { get; set; }
+
+            public int SuccessCount { get; set; }
+
+            public int FailedCount { get; set; }
+
+            public int ChangedCount { get; set; }
         }
 
         [UsedImplicitly]
@@ -82,7 +88,10 @@ namespace Katalye.Components.Queries
                                         CreatedOn = creationEvent.Timestamp,
                                         Minions = creationEvent.Minions,
                                         MissingMinions = creationEvent.MissingMinions,
-                                        ReturnData = returnEvent.ReturnData
+                                        ReturnData = returnEvent.ReturnData,
+                                        SuccessCount = returnEvent.SuccessCount,
+                                        ChangedCount = returnEvent.ChangedCount,
+                                        FailedCount = returnEvent.FailedCount
                                     }).SingleOrDefaultAsync(cancellationToken);
                 return result;
             }

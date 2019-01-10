@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
@@ -100,6 +102,8 @@ namespace Katalye.Components.Commands
                     Arguments = message.Data.FunctionArguments
                 });
 
+                var stats = ParseStats(message);
+
                 Guid returnEventId;
                 using (var unit = await _context.Database.BeginTransactionAsync())
                 {
@@ -110,7 +114,10 @@ namespace Katalye.Components.Commands
                         ReturnCode = message.Data.ReturnCode,
                         Success = message.Data.Success,
                         Timestamp = message.Data.Timestamp,
-                        ReturnData = message.Data.Return
+                        ReturnData = message.Data.Return,
+                        ChangedCount = stats.ChangedCount,
+                        FailedCount = stats.FailedCount,
+                        SuccessCount = stats.SuccessCount
                     };
                     _context.MinionReturnEvents.Add(returnEvent);
                     await _context.SaveChangesAsync();
@@ -125,6 +132,84 @@ namespace Katalye.Components.Commands
                     Function = message.Data.Function,
                     MinionReturnEventId = returnEventId
                 });
+            }
+
+            private (int ChangedCount, int FailedCount, int SuccessCount) ParseStats(Command message)
+            {
+                int changed;
+                int failed;
+                int success;
+
+                if (new[] {"state.highstate", "state.apply"}.Contains(message.Data.Function))
+                {
+                    Logger.Debug("Detected job as state data, will process return data.");
+
+                    try
+                    {
+                        var returnData = message.Data.Return.ToObject<Dictionary<string, MinimumStateProgress>>();
+
+                        Logger.Debug($"Found {returnData.Count} progress reports.");
+
+                        changed = returnData.Count(x => x.Value.Changes != null && x.Value.Changes.ToString() != "{}");
+                        failed = returnData.Count(x => !x.Value.RunResult);
+                        success = returnData.Count(x => x.Value.RunResult);
+                    }
+                    catch (JsonSerializationException e)
+                    {
+                        Logger.Warn(e, "Job return data failed to deserialize.");
+                        changed = 0;
+                        failed = 0;
+                        success = 0;
+                    }
+                }
+                else
+                {
+                    Logger.Debug("Could not detect function type for parsing, using defaults.");
+                    if (message.Data.Success)
+                    {
+                        success = 1;
+                        failed = 0;
+                    }
+                    else
+                    {
+                        failed = 1;
+                        success = 0;
+                    }
+
+                    changed = -1;
+                }
+
+                return (changed, failed, success);
+            }
+
+            private class MinimumStateProgress
+            {
+                [JsonProperty("comment")]
+                public string Comment { get; set; }
+
+                [JsonProperty("name")]
+                public string Name { get; set; }
+
+                [JsonProperty("start_time")]
+                public DateTimeOffset StartTime { get; set; }
+
+                [JsonProperty("result")]
+                public bool RunResult { get; set; }
+
+                [JsonProperty("duration")]
+                public double Duration { get; set; }
+
+                [JsonProperty("__run_num__")]
+                public long RunNumber { get; set; }
+
+                [JsonProperty("__sls__")]
+                public string Sls { get; set; }
+
+                [JsonProperty("changes")]
+                public JToken Changes { get; set; }
+
+                [JsonProperty("__id__")]
+                public string Id { get; set; }
             }
         }
     }

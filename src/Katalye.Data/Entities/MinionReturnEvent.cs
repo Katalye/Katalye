@@ -29,6 +29,12 @@ namespace Katalye.Data.Entities
 
         public long ReturnCode { get; set; }
 
+        public int SuccessCount { get; set; }
+
+        public int FailedCount { get; set; }
+
+        public int ChangedCount { get; set; }
+
         public DateTimeOffset Timestamp { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }

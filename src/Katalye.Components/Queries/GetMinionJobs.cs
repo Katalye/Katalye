@@ -48,6 +48,12 @@ namespace Katalye.Components.Queries
             public DateTimeOffset? CreatedOn { get; set; }
 
             public bool CreationEventExists { get; set; }
+
+            public int SuccessCount { get; set; }
+
+            public int FailedCount { get; set; }
+
+            public int ChangedCount { get; set; }
         }
 
         [UsedImplicitly]
@@ -77,7 +83,10 @@ namespace Katalye.Components.Queries
                                         User = creationEvent.User,
                                         Targets = creationEvent.Targets,
                                         CreationEventExists = creationEvent != null,
-                                        CreatedOn = creationEvent.Timestamp
+                                        CreatedOn = creationEvent.Timestamp,
+                                        SuccessCount = returnEvent.SuccessCount,
+                                        ChangedCount = returnEvent.ChangedCount,
+                                        FailedCount = returnEvent.FailedCount
                                     }).PageAsync(message, new Result());
 
                 return result;
