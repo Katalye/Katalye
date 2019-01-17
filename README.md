@@ -10,9 +10,11 @@ Katalye is an enterprise class SaltStack UI solution, providing rich insights in
 
 Rather than simply providing a UI around the SaltStack API or SaltStack python models, Katalye attempts to integrate directly into SaltStack using standardized API's. This gives Katalye the speed, flexibility, stability, and maintainability required to scale and grow.
 
-> Katalye is under rapid development. Feedbox at this early stage is welcome.
+> Katalye is under rapid development. Feeback at this early stage is welcome.
 
 The UI component of Katalye can be found [here](https://github.com/Katalye/Katalye.UI).
+
+![Prototype Job Details](docs/images/minion-job-details.png)
 
 ## Future
 
@@ -113,6 +115,8 @@ The following environment variables are supported:
 - `KATALYE__SALT__USER`: Required: The Katalye username.
 - `KATALYE__SALT__PASSWORD`: Required: The Katalye password.
 - `CONNECTIONSTRINGS__KATALYECONTEXT`: Required: The connection formation for the PostgreSQL database. [Supported format](https://www.connectionstrings.com/postgresql/).
+
+> Note the double underscores in some varribles.
 
 If using `docker-compose` deployment is as simple as:
 
