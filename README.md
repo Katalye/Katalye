@@ -1,5 +1,9 @@
 # Katalye
 
+[![AppVeyor](https://img.shields.io/appveyor/ci/Silvenga/katalye.svg?logo=appveyor&maxAge=3600&style=flat-square)](https://ci.appveyor.com/project/Silvenga/katalye)
+[![DockerHub](https://img.shields.io/badge/image-dockerhub-blue.svg?maxAge=3600&logo=docker&style=flat-square)](https://hub.docker.com/r/katalye/katalye-api)
+[![License](https://img.shields.io/github/license/Katalye/Katalye.svg?maxAge=86400&style=flat-square)](https://github.com/Katalye/Katalye/blob/master/LICENSE)
+
 ## Introduction
 
 Katalye is an enterprise class SaltStack UI solution, providing rich insights into a SaltStack cluster. Built by DevOps for DevOps to more easily maintain and scale a SaltStack deployment.
