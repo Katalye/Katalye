@@ -1,17 +1,8 @@
 # -*- coding: utf-8 -*-
+# Version 0.0.1
+
 '''
-Take data from salt and "return" it into http endpoint as json
-
-Add the following to the minion or master configuration file.
-
-.. code-block:: yaml
-
-    http_json.endpoint: <endpoint>
-
-Common use is to log all events on the master. This can generate a lot of
-noise, so you may wish to configure batch processing and/or configure the
-:conf_master:`event_return_whitelist` or :conf_master:`event_return_blacklist`
-to restrict the events that are written.
+Emits event data to be used by a Katalye server.
 '''
 
 # Import python libs
@@ -25,19 +16,17 @@ import salt.utils.json
 log = logging.getLogger(__name__)
 
 # Define the module's virtual name
-__virtualname__ = 'http_json'
-
+__virtualname__ = 'katalye'
 
 def __virtual__():
     return __virtualname__
 
-
 def _get_options(ret):
     '''
-    Returns options used for the rawfile_json returner.
+    Returns options used for Katalye.
     '''
-    defaults = {'endpoint': ''}
-    attrs = {'endpoint': 'endpoint'}
+    defaults = {'server': '', 'secure': False, 'path_prefix': '/api/v1/export/event'}
+    attrs = {'server': 'server', 'secure': 'secure', 'path_prefix': 'path_prefix'}
     _options = salt.returners.get_returner_options(__virtualname__,
                                                    ret,
                                                    attrs,
@@ -47,19 +36,27 @@ def _get_options(ret):
 
     return _options
 
-def _post_data(options=None, json=None):
+def _post_data(options=None, tag='', json=None):
     '''
     Post data endpoint
     '''
 
+    schema = 'https' if options['secure'] else 'http'
+    endpoint = schema + '://' + options['server'] + options['path_prefix']
+    base_url = endpoint if endpoint.endswith('/') else endpoint + "/"
+
+    log.error(
+      tag + " " + salt.utils.json.dumps(json),
+    )
+
     res = salt.utils.http.query(
-        url=options['endpoint'],
+        url=base_url + tag,
         method='POST',
         params={},
         data=json,
-        decode=True,
+        decode=False,
         status=True,
-        header_dict={},
+        header_dict={'Content-Type':'application/json'},
         opts=__opts__,
     )
 
@@ -67,31 +64,29 @@ def _post_data(options=None, json=None):
         return True
     else:
         log.error(
-            'Error returned from endpoint. Status code: %s.',
-            res.status_code
+            'Error returned from endpoint: %s.',
+            salt.utils.json.dumps(res)
         )
         return False
 
 def returner(ret):
     '''
-    Write the return data to http endpoint
+    Not currently used.
     '''
-    opts = _get_options({})  # Pass in empty ret, since this is a list of events
-    res = _post_data(options=_options, json=salt.utils.json.loads(ret))
-
-    return res
+    pass
 
 def event_return(events):
     '''
-    Write event data (return data and non-return data) to http endpoint
+    Write event data (return data and non-return data) to Katalye
     '''
     if len(events) == 0:
         # events is an empty list.
         return
     opts = _get_options({})  # Pass in empty ret, since this is a list of events
-    
+
     for event in events:
-        res = _post_data(options=opts, json=salt.utils.json.loads(event))
+        tag = event.get('tag', '')
+        data = event.get('data', '')
+        res = _post_data(options=opts,tag=tag, json=salt.utils.json.dumps(data))
         if not res:
-            log.error('Could not write event to http_json %s', opts['endpoint'])
-            raise
+            log.error('Could not write event to Katalye: %s.', opts['server'])
