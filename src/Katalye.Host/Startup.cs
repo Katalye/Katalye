@@ -41,7 +41,7 @@ namespace Katalye.Host
                     .AddDbContext<KatalyeContext>(options => options.UseNpgsql(connectionString));
 
             services.AddHangfire(config =>
-                config.UsePostgreSqlStorage(Configuration.GetConnectionString("HangfireContext")));
+                config.UsePostgreSqlStorage(Configuration.GetConnectionString(nameof(KatalyeContext))));
 
             services.IncludeRegistry<MediatrRegistry>();
             services.IncludeRegistry<KatalyeRegistry>();
@@ -52,6 +52,7 @@ namespace Katalye.Host
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseMiddleware<AspNetCoreLoggingFilter>();
+            app.EnsureMigrationOfContext<KatalyeContext>();
 
             if (env.IsDevelopment())
             {
