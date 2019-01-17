@@ -1,0 +1,20 @@
+version: 0.0.{build}-ci
+image: Ubuntu
+environment:
+  DOCKER_USERNAME:
+    secure: hn2vauofTyGlL4ghb9l1AQ==
+  DOCKER_PASSWORD:
+    secure: z0QkG5dMUovqmdiVrojAAA==
+init:
+- pwsh: >-
+    if ($env:APPVEYOR_REPO_TAG -eq 'true') {
+        $tag = $env:APPVEYOR_REPO_TAG_NAME
+        Update-AppveyorBuild -Version "$tag"
+    }
+build_script:
+- pwsh: ./build.ps1 -Version "$env:APPVEYOR_BUILD_VERSION"
+deploy_script:
+- pwsh: >-
+    if ($env:APPVEYOR_REPO_TAG -eq 'true') {
+      ./build.ps1 -Version "$env:APPVEYOR_BUILD_VERSION" -DockerUsername "$env:DOCKER_USERNAME" -DockerPassword "$env:DOCKER_PASSWORD" -Push -TagLatest
+    }
