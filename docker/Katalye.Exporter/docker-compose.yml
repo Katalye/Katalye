@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  katalye.exporter:
-    image: ${DOCKER_REGISTRY}katalyeexporter
-    build:
-      context: .
-      dockerfile: ../../src/Katalye.Exporter/Dockerfile
