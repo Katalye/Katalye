@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -45,7 +46,7 @@ namespace Katalye.Components.Tests
             var result = JsonConvert.DeserializeObject<ReturnDataConverterFixture>(json);
 
             // Assert
-            result.Data.ToString().Should().Be("{\r\n  \"key\": {\r\n    \"Test\": true\r\n  }\r\n}");
+            result.Data.ToString().Should().Be("{\r\n  \"key\": {\r\n    \"Test\": true\r\n  }\r\n}".Replace("\r\n", Environment.NewLine));
         }
 
         public class ReturnDataConverterFixture
