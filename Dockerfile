@@ -22,6 +22,12 @@ FROM build AS publish
 RUN dotnet publish src/Katalye.Host/Katalye.Host.csproj -o /app
 
 FROM base AS final
-WORKDIR /app
+LABEL maintainer="Katalye (github.com/Katalye)"
 COPY --from=publish /app .
+
+ENV ASPNETCORE_URLS=http://+:5000 \
+    ASPNETCORE_ENVIRONMENT=production
+EXPOSE 5000
+WORKDIR /app
+
 ENTRYPOINT ["dotnet", "Katalye.Host.dll"]

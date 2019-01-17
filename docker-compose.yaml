@@ -1,0 +1,24 @@
+version: '2.1'
+services:
+  katalye-api:
+    # image: katalye/katalye-api
+    build: .
+    restart: on-failure
+    ports:
+      - 5000:5000
+    environment: 
+      KATALYE__SALT__API: http://localhost:5002
+      KATALYE__SALT__USER: katalye
+      KATALYE__SALT__PASSWORD: SilverLight
+      CONNECTIONSTRINGS__KATALYECONTEXT: Server=db;Database=katalye;User ID=postgres;Password=SilverLight
+    links:
+      - postgres:db
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:10-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_PASSWORD: SilverLight
+    expose:
+      - 5432
