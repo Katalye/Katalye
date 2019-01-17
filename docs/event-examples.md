@@ -155,3 +155,15 @@ salt/job/20180708204022106325/prog/d1/1, {
   "id": "d1",
   "out": "highstate"
 }
+
+{
+  "fun_args": [],
+  "jid": "20180708041923644480",
+  "return": true,
+  "retcode": 0,
+  "success": true,
+  "cmd": "_return",
+  "_stamp": "2018-07-08T04:19:28.61852",
+  "fun": "test.ping",
+  "id": "d1"
+}
