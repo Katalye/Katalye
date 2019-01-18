@@ -38,10 +38,10 @@ namespace Katalye.Components.Commands
             public JToken Return { get; set; }
 
             [JsonProperty("retcode")]
-            public long ReturnCode { get; set; }
+            public long? ReturnCode { get; set; }
 
             [JsonProperty("success")]
-            public bool Success { get; set; }
+            public bool? Success { get; set; }
 
             [JsonProperty("cmd")]
             public string Cmd { get; set; }
@@ -164,8 +164,10 @@ namespace Katalye.Components.Commands
                 }
                 else
                 {
+                    // Job status is often incorrect.
+                    // https://github.com/saltstack/salt/issues/45775
                     Logger.Debug("Could not detect function type for parsing, using defaults.");
-                    if (message.Data.Success)
+                    if (message.Data.ReturnCode == 0 || message.Data.Success == true)
                     {
                         success = 1;
                         failed = 0;

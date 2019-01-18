@@ -33,7 +33,7 @@ namespace Katalye.Components.Queries
 
             public string Function { get; set; }
 
-            public bool Success { get; set; }
+            public bool? Success { get; set; }
 
             public DateTimeOffset ReturnedOn { get; set; }
 

@@ -25,9 +25,9 @@ namespace Katalye.Data.Entities
         [NotMapped]
         public JToken ReturnData { get; set; }
 
-        public bool Success { get; set; }
+        public bool? Success { get; set; }
 
-        public long ReturnCode { get; set; }
+        public long? ReturnCode { get; set; }
 
         public int SuccessCount { get; set; }
 

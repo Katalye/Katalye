@@ -33,7 +33,7 @@ namespace Katalye.Components.Queries
 
             public JToken ReturnData { get; set; }
 
-            public bool Success { get; set; }
+            public bool? Success { get; set; }
 
             public DateTimeOffset ReturnedOn { get; set; }
 
