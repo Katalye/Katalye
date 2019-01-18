@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace Katalye.Components.Commands
         public class Command : IRequest<Result>
         {
             public TimeSpan Age { get; set; }
+
+            [CanBeNull]
+            public IList<string> Minions { get; set; }
         }
 
         public class Result
@@ -42,9 +46,12 @@ namespace Katalye.Components.Commands
             {
                 Logger.Info($"Minion grain refresh in-progress, locating grain data that is older than {message.Age}.");
 
+                var limitByMinion = message.Minions?.Any() ?? false;
+
                 var cutoff = DateTimeOffset.Now - message.Age;
                 var minions = await _context.Minions
                                             .Where(x => x.LastGrainRefresh == null || x.LastGrainRefresh < cutoff)
+                                            .Where(x => !limitByMinion || message.Minions.Contains(x.MinionSlug))
                                             .Select(x => x.MinionSlug)
                                             .ToListAsync(cancellationToken);
 

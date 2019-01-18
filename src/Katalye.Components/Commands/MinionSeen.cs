@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Katalye.Components.Notifications;
 using Katalye.Data;
 using Katalye.Data.Entities;
 using MediatR;
@@ -30,10 +31,12 @@ namespace Katalye.Components.Commands
             private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
             private readonly KatalyeContext _context;
+            private readonly IMediator _mediator;
 
-            public Handler(KatalyeContext context)
+            public Handler(KatalyeContext context, IMediator mediator)
             {
                 _context = context;
+                _mediator = mediator;
             }
 
             public async Task<Result> Handle(Command message, CancellationToken cancellationToken)
@@ -45,8 +48,8 @@ namespace Katalye.Components.Commands
                     var minion = await _context.Minions
                                                .SingleOrDefaultAsync(x => x.MinionSlug == message.Slug, cancellationToken);
 
-                    var minionExists = minion != null;
-                    if (!minionExists)
+                    var minionDiscovered = minion == null;
+                    if (minionDiscovered)
                     {
                         Logger.Info($"Minion {message.Slug} is unknown, it will be recorded.");
                         minion = new Minion
@@ -60,6 +63,14 @@ namespace Katalye.Components.Commands
 
                     await _context.SaveChangesAsync(cancellationToken);
                     unit.Commit();
+
+                    if (minionDiscovered)
+                    {
+                        await _mediator.Publish(new MinionDiscovered.Notification
+                        {
+                            MinionSlug = message.Slug
+                        }, cancellationToken);
+                    }
 
                     return new Result
                     {
