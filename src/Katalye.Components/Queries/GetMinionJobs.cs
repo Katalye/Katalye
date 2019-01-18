@@ -54,6 +54,8 @@ namespace Katalye.Components.Queries
             public int FailedCount { get; set; }
 
             public int ChangedCount { get; set; }
+
+            public long? ReturnCode { get; set; }
         }
 
         [UsedImplicitly]
@@ -78,6 +80,7 @@ namespace Katalye.Components.Queries
                                         Function = job.Function,
                                         Arguments = job.Arguments,
                                         Success = returnEvent.Success,
+                                        ReturnCode = returnEvent.ReturnCode,
                                         ReturnedOn = returnEvent.Timestamp,
                                         TargetType = creationEvent.TargetType,
                                         User = creationEvent.User,
