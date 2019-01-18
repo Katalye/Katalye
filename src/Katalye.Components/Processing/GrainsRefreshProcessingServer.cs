@@ -23,7 +23,7 @@ namespace Katalye.Components.Processing
         {
             await _mediator.Send(new RefreshMinionGrains.Command
             {
-                Age = TimeSpan.FromHours(1)
+                Age = TimeSpan.FromHours(12)
             }, cancellationToken);
         }
     }
