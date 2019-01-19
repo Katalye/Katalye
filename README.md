@@ -66,7 +66,7 @@ useradd --system katalye
 echo 'katalye:SilverLight' | chpasswd
 ``` 
 
-Then authorize the created user to perform actions on the `salt-api`.
+Then authorize the created user to perform actions on the `salt-api`. More information about `eauth` can be found [here](https://docs.saltstack.com/en/latest/topics/eauth/index.html).
 
 ```yaml
 # /etc/salt/master.d/api-auth.conf
@@ -84,7 +84,7 @@ Currently, the following permissions are required, more will be added as new fea
 
 The `katalye` returner is a required component. The `katalye` returner is used to retrieve events directly from the SaltStack event bus.
 
-The easiest way to install the `katalye` returner is to drop [`katalye.py`](https://github.com/Katalye/Katalye/blob/master/katalye.py) into the `_returners,` directory within the [`file_roots`](https://docs.saltstack.com/en/latest/ref/configuration/master.html#std:conf_master-file_roots) specified by the master config file. More documentation can be found [here](https://docs.saltstack.com/en/latest/ref/returners/#using-custom-returner-modules).
+The easiest way to install the `katalye` returner is to drop [`katalye.py`](https://github.com/Katalye/Katalye/blob/master/katalye.py) into the `_returners` directory within the [`file_roots`](https://docs.saltstack.com/en/latest/ref/configuration/master.html#std:conf_master-file_roots) specified by the master config file. More documentation can be found [here](https://docs.saltstack.com/en/latest/ref/returners/#using-custom-returner-modules).
 
 > Executing `salt '*' saltutil.sync_returners` may be required to update the sync the returner with the SaltStack cluster.
 
@@ -122,4 +122,15 @@ If using `docker-compose` deployment is as simple as:
 
 ```
 docker-compose up -d
+```
+
+
+## Usage
+
+Once the docker containers are running, Katalye will execute automatic migrations against the database. At this point, the web UI should be functional. The example `docker-compose.yaml` exposes this UI on port `5000` which is accessible via your browser `http://<docker host>:5000`.
+
+Current, Katalye lazily discovers minions - meaning, if no event traffic for a minion has been seen by Katalye, no minions will be visible. You can wait for normal events to occur within the SaltStack cluster or you can manually dispatch a job to all minions. For example:
+
+```bash
+salt \* test.ping
 ```
