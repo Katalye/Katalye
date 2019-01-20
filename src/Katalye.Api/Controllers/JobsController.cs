@@ -21,5 +21,12 @@ namespace Katalye.Api.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        [HttpGet("{Jid}")]
+        public async Task<IActionResult> GetJobMinions(GetJobMinions.Query query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
     }
 }
