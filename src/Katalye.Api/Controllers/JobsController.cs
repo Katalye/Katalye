@@ -23,6 +23,18 @@ namespace Katalye.Api.Controllers
         }
 
         [HttpGet("{Jid}")]
+        public async Task<IActionResult> GetJob(GetJobByJid.Query query)
+        {
+            var result = await _mediator.Send(query);
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("{Jid}/minions")]
         public async Task<IActionResult> GetJobMinions(GetJobMinions.Query query)
         {
             var result = await _mediator.Send(query);
