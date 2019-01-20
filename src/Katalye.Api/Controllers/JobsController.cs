@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using Katalye.Components.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Katalye.Api.Controllers
@@ -11,6 +13,13 @@ namespace Katalye.Api.Controllers
         public JobsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetJobs(GetJobs.Query query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
         }
     }
 }
