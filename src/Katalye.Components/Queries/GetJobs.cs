@@ -47,7 +47,7 @@ namespace Katalye.Components.Queries
                 var result = await (from job in _context.Jobs
                                     from createEvent in _context.JobCreationEvents.Where(x => x.JobId == job.Id).DefaultIfEmpty()
                                     let minionCount = _context.MinionReturnEvents.Count(x => x.JobId == job.Id)
-                                    let success = _context.MinionReturnEvents.Count(x => x.JobId == job.Id && x.Success == true || x.ReturnCode == 0)
+                                    let success = _context.MinionReturnEvents.Count(x => x.JobId == job.Id && x.Success != false && x.ReturnCode == 0)
                                     let hasCreationEvent = createEvent != null
                                     select new Model
                                     {
