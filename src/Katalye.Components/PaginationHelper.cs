@@ -12,7 +12,7 @@ namespace Katalye.Components
                                                                                         TResultContainer resultContainer)
             where TResultContainer : PagedResult<TResult>
         {
-            var result = await queryable.PageAsync(query.Page ?? 1, query.Size ?? 10);
+            var result = await queryable.PageAsync(query.Page ?? 1, query.Size ?? 20);
             resultContainer.Count = result.Count;
             resultContainer.Size = result.Size;
             resultContainer.Page = result.Page;
@@ -25,7 +25,7 @@ namespace Katalye.Components
             where TResultContainer : PagedResult<TResult>, new()
         {
             var resultContainer = new TResultContainer();
-            var result = await queryable.PageAsync(query.Page ?? 1, query.Size ?? 10);
+            var result = await queryable.PageAsync(query.Page ?? 1, query.Size ?? 20);
             resultContainer.Count = result.Count;
             resultContainer.Size = result.Size;
             resultContainer.Page = result.Page;
@@ -34,7 +34,7 @@ namespace Katalye.Components
             return resultContainer;
         }
 
-        public static async Task<PagedResult<T>> PageAsync<T>(this IQueryable<T> queryable, int page, int size = 10, int maxSize = 50)
+        public static async Task<PagedResult<T>> PageAsync<T>(this IQueryable<T> queryable, int page, int size = 20, int maxSize = 50)
         {
             var normalizedPage = Math.Max(1, page) - 1;
             var normalizedSize = Math.Min(Math.Max(1, size), maxSize);
