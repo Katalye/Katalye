@@ -53,6 +53,7 @@ namespace Katalye.Components.Queries
                 var result = await (from job in _context.Jobs.Where(x => x.Jid == message.Jid)
                                     from returnEvent in _context.MinionReturnEvents.Where(x => x.JobId == job.Id)
                                     let minion = returnEvent.Minion
+                                    orderby returnEvent.Timestamp descending
                                     select new Model
                                     {
                                         MinionId = minion.MinionSlug,
