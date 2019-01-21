@@ -64,7 +64,7 @@ namespace Katalye.Components.Commands
                     var result = await _mediator.Send(new CreateJob.Command
                     {
                         Client = JobClient.LocalAsync,
-                        Function = "grains.items",
+                        Function = SaltCommands.GrainsItems,
                         Target = targetList,
                         Username = _configuration.SaltApiServiceUsername,
                         Password = _configuration.SaltApiServicePassword
