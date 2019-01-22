@@ -23,10 +23,15 @@ The UI component of Katalye can be found [here](https://github.com/Katalye/Katal
 - Provide insights and historical information about minions and jobs.
 - Gather an inventory of salt minions and basic information.
 - Gather information about authentication statistics. 
+- Settings page + diagnoses.
+- Minions overview.
 
 #### Phase 2
 - Authentication - LDAP, Salt-API.
+- User management.
 - Alerts on failed jobs and rejected keys - Email, Web UI.
+- Notification feed.
+- Basic reporting.
 
 #### Phase 3
 - Basic support for executing common modules.
