@@ -14,7 +14,9 @@ Rather than simply providing a UI around the SaltStack API or SaltStack python m
 
 The UI component of Katalye can be found [here](https://github.com/Katalye/Katalye.UI).
 
-![Prototype Job Details](docs/images/minion-job-details.png)
+![Prototype Job Details](docs/images/job.png)
+
+![Prototype Minion Job Details](docs/images/minion-job-details.png)
 
 ## Future
 
