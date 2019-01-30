@@ -12,6 +12,8 @@ namespace Katalye.Data
     [UsedImplicitly]
     public class KatalyeContext : DbContext
     {
+        public DbSet<ServerConfigurationValue> ServerConfigurationValues { get; set; }
+
         public DbSet<Job> Jobs { get; set; }
 
         public DbSet<MinionReturnEvent> MinionReturnEvents { get; set; }
