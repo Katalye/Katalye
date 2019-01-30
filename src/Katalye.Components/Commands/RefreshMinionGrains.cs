@@ -59,7 +59,7 @@ namespace Katalye.Components.Commands
                 {
                     var targetList = string.Join(",", minions);
 
-                    Logger.Info($"Requesting refreshes for {minions} minions.");
+                    Logger.Info($"Requesting refreshes for {minions.Count} minions.");
 
                     var result = await _mediator.Send(new CreateJob.Command
                     {
