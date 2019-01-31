@@ -25,7 +25,7 @@ namespace Katalye.Components.Configuration.Providers
             return (ready, value);
         }
 
-        public async Task Load()
+        public async Task<int> Load()
         {
             var values = await _context.ServerConfigurationValues
                                        .Select(x =>
@@ -37,6 +37,8 @@ namespace Katalye.Components.Configuration.Providers
                                        .ToListAsync();
 
             _lookup = values.ToDictionary(x => x.Key, x => x.Value);
+
+            return _lookup.Count;
         }
     }
 }
