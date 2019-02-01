@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Components.Common;
+using Katalye.Components.Configuration;
 using MediatR;
 using NLog;
 

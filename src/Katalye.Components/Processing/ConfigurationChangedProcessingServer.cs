@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Components.Commands;
 using Katalye.Components.Common;
+using Katalye.Components.Configuration;
 using Katalye.Data;
 using MediatR;
 using NLog;

@@ -5,6 +5,7 @@ using Castle.DynamicProxy;
 using FluentAssertions;
 using Katalye.Components.Configuration;
 using Katalye.Components.Configuration.Providers;
+using Katalye.Components.Configuration.ValueParsers;
 using NSubstitute;
 using Xunit;
 
@@ -23,7 +24,7 @@ namespace Katalye.Components.Tests.Configuration
                 providerMock
             };
 
-            var interceptor = new RoutingInterceptor(configurationProviders);
+            var interceptor = new RoutingInterceptor(configurationProviders, type => new StringValueParser());
 
             var fixture = new ConfigurationRouter(new ProxyGenerator(), interceptor);
             var config = fixture.CreateConfiguration();
@@ -44,7 +45,7 @@ namespace Katalye.Components.Tests.Configuration
                 providerMock
             };
 
-            var interceptor = new RoutingInterceptor(configurationProviders);
+            var interceptor = new RoutingInterceptor(configurationProviders, type => new StringValueParser());
 
             var fixture = new ConfigurationRouter(new ProxyGenerator(), interceptor);
             var config = fixture.CreateConfiguration();
@@ -68,7 +69,7 @@ namespace Katalye.Components.Tests.Configuration
                 providerMock
             };
 
-            var interceptor = new RoutingInterceptor(configurationProviders);
+            var interceptor = new RoutingInterceptor(configurationProviders, type => new UriValueParser());
 
             var fixture = new ConfigurationRouter(new ProxyGenerator(), interceptor);
             var config = fixture.CreateConfiguration();
@@ -92,7 +93,7 @@ namespace Katalye.Components.Tests.Configuration
                 providerMock
             };
 
-            var interceptor = new RoutingInterceptor(configurationProviders);
+            var interceptor = new RoutingInterceptor(configurationProviders, type => new BooleanValueParser());
 
             var fixture = new ConfigurationRouter(new ProxyGenerator(), interceptor);
             var config = fixture.CreateConfiguration();

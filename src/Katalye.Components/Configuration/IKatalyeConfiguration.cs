@@ -1,7 +1,6 @@
 ﻿using System;
-using Katalye.Components.Configuration;
 
-namespace Katalye.Components
+namespace Katalye.Components.Configuration
 {
     public interface IKatalyeConfiguration
     {
@@ -14,7 +13,7 @@ namespace Katalye.Components
         [ConfigurationMember("Katalye:Salt:Password")]
         string SaltApiServicePassword { get; }
 
-        [ConfigurationMember("Katalye:DisableDistributedLocks")]
+        [ConfigurationMember("Katalye:DisableDistributedLocks", DefaultValue = "false")]
         bool DisableDistributedLocks { get; }
     }
 }

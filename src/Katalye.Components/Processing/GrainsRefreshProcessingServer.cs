@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Components.Commands;
+using Katalye.Components.Configuration;
 using MediatR;
 
 namespace Katalye.Components.Processing

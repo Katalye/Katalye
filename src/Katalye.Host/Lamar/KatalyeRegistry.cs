@@ -1,7 +1,7 @@
 ﻿using Castle.DynamicProxy;
-using Katalye.Components;
 using Katalye.Components.Configuration;
 using Katalye.Components.Configuration.Providers;
+using Katalye.Components.Configuration.ValueParsers;
 using Katalye.Components.Processing;
 using Katalye.Data;
 using Lamar;
@@ -19,6 +19,7 @@ namespace Katalye.Host.Lamar
             {
                 scanner.AssembliesAndExecutablesFromPath("./", assembly => assembly.FullName.StartsWith("Katalye."));
                 scanner.AddAllTypesOf<ProcessingServer>();
+                scanner.ConnectImplementationsToTypesClosing(typeof(IValueParser<>));
                 scanner.WithDefaultConventions();
             });
 
@@ -30,6 +31,12 @@ namespace Katalye.Host.Lamar
             });
 
             For<IProxyGenerator>().Use<ProxyGenerator>();
+            For<CreateValueParser>().Use(context => x =>
+            {
+                var closedType = typeof(IValueParser<>).MakeGenericType(x);
+                var instance = context.GetInstance(closedType);
+                return (IValueParser) instance;
+            });
             For<IKatalyeConfiguration>().Use(x =>
             {
                 var router = x.GetInstance<ConfigurationRouter>();

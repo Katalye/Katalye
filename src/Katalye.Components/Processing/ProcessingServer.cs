@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Hangfire.Server;
+using Katalye.Components.Configuration;
 using NLog;
 
 namespace Katalye.Components.Processing

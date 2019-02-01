@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Castle.DynamicProxy;
 using Katalye.Components.Configuration.Providers;
+using Katalye.Components.Configuration.ValueParsers;
 using NLog;
 
 namespace Katalye.Components.Configuration
@@ -12,84 +12,63 @@ namespace Katalye.Components.Configuration
     {
     }
 
+    public delegate IValueParser CreateValueParser(Type type);
+
     public class RoutingInterceptor : IRoutingInterceptor
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        private readonly CreateValueParser _createValueParser;
         private readonly IList<IConfigurationProvider> _providers;
 
-        public RoutingInterceptor(IList<IConfigurationProvider> providers)
+        public RoutingInterceptor(IList<IConfigurationProvider> providers, CreateValueParser createValueParser)
         {
+            _createValueParser = createValueParser;
             _providers = providers
-                         .OrderByDescending(x => x.Priority)
+                         .OrderBy(x => x.Priority)
                          .ToList();
         }
 
         public void Intercept(IInvocation invocation)
         {
-            var propertyName = invocation.Method.Name.Substring("get_".Length);
-            var propertyMemberInfo = invocation.Method.DeclaringType?.GetProperty(propertyName);
-            var configuration = propertyMemberInfo?.GetCustomAttribute<ConfigurationMemberAttribute>()
+            var configuration = ConfigurationMemberHelper.GetConfigurationMemberAttributeFromMethodInfo(invocation.Method)
                                 ?? throw new Exception($"No {nameof(ConfigurationMemberAttribute)} could be found, "
                                                        + "this should be impossible at this point");
 
             foreach (var provider in _providers)
             {
-                var result = provider.TryGet(configuration.Path, configuration.DefaultValue);
-                if (result.Success)
+                var (success, value) = provider.TryGet(configuration.Path, configuration.DefaultValue);
+                if (success)
                 {
-                    var parsedValue = ParseResult(invocation.Method.ReturnType, result.Value);
+                    var parsedValue = ParseResult(invocation.Method.ReturnType, value, configuration.Path);
                     invocation.ReturnValue = parsedValue;
+                    return;
                 }
             }
         }
 
-        public object ParseResult(Type type, string value)
+        private object ParseResult(Type type, string value, string path)
         {
             object result = null;
             try
             {
-                if (type == typeof(string))
+                var parser = _createValueParser.Invoke(type);
+                if (parser != null)
                 {
-                    result = value;
-                }
-                else if (type == typeof(int))
-                {
-                    result = int.Parse(value);
-                }
-                else if (type == typeof(long))
-                {
-                    result = long.Parse(value);
-                }
-                else if (type == typeof(bool))
-                {
-                    result = bool.Parse(value);
-                }
-                else if (type == typeof(decimal))
-                {
-                    result = decimal.Parse(value);
-                }
-                else if (type == typeof(Uri))
-                {
-                    return new Uri(value);
+                    result = parser.Parse(value);
                 }
                 else
                 {
-                    Logger.Error($"No parser for type {type.FullName} exists, returning a default value.");
+                    Logger.Error($"For configuration path [{path}] no parser for type {type.FullName} exists, returning a default value.");
                 }
             }
             catch (Exception e)
             {
-                Logger.Warn(e, $"Failed to parse value [{value}] to type [{type.FullName}], "
+                Logger.Warn(e, $"For configuration path [{path}] failed to parse value [{value}] to type [{type.FullName}], "
                                + "a default value will be used.");
             }
 
-            if (result == null)
-            {
-                result = GetDefaultValue(type);
-            }
-
-            return result;
+            return result ?? GetDefaultValue(type);
         }
 
         private object GetDefaultValue(Type t)

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Components.Common;
+using Katalye.Components.Configuration;
 using Katalye.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
