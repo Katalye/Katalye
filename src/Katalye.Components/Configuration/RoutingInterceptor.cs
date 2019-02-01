@@ -53,32 +53,39 @@ namespace Katalye.Components.Configuration
                 {
                     result = value;
                 }
-
-                if (type == typeof(int))
+                else if (type == typeof(int))
                 {
                     result = int.Parse(value);
                 }
-
-                if (type == typeof(long))
+                else if (type == typeof(long))
                 {
                     result = long.Parse(value);
                 }
-
-                if (type == typeof(bool))
+                else if (type == typeof(bool))
                 {
                     result = bool.Parse(value);
                 }
-
-                if (type == typeof(decimal))
+                else if (type == typeof(decimal))
                 {
                     result = decimal.Parse(value);
+                }
+                else if (type == typeof(Uri))
+                {
+                    return new Uri(value);
+                }
+                else
+                {
+                    Logger.Error($"No parser for type {type.FullName} exists, returning a default value.");
                 }
             }
             catch (Exception e)
             {
                 Logger.Warn(e, $"Failed to parse value [{value}] to type [{type.FullName}], "
                                + "a default value will be used.");
+            }
 
+            if (result == null)
+            {
                 result = GetDefaultValue(type);
             }
 
