@@ -36,16 +36,7 @@ namespace Katalye.Components.Configuration
 
             public bool ShouldInterceptMethod(Type type, MethodInfo methodInfo)
             {
-                if (methodInfo.IsSpecialName && methodInfo.Name.StartsWith("get_"))
-                {
-                    var propertyName = methodInfo.Name.Substring("get_".Length);
-                    var propertyMemberInfo = type.GetProperty(propertyName);
-                    var member = propertyMemberInfo?.GetCustomAttribute<ConfigurationMemberAttribute>();
-                    var shouldInterceptMethod = member != null;
-                    return shouldInterceptMethod;
-                }
-
-                return false;
+                return ConfigurationMemberHelper.GetConfigurationMemberAttributeFromMethodInfo(methodInfo) != null;
             }
         }
     }
