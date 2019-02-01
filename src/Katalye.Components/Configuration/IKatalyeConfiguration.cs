@@ -13,7 +13,7 @@ namespace Katalye.Components.Configuration
         [ConfigurationMember("Katalye:Salt:Password")]
         string SaltApiServicePassword { get; }
 
-        [ConfigurationMember("Katalye:DisableDistributedLocks", DefaultValue = "false")]
+        [ConfigurationMember("Katalye:DisableDistributedLocks", "false")]
         bool DisableDistributedLocks { get; }
     }
 }

@@ -9,7 +9,7 @@ namespace Katalye.Components.Configuration
 
         public string DefaultValue { get; set; } = string.Empty;
 
-        public ConfigurationMemberAttribute(string path)
+        public ConfigurationMemberAttribute(string path, string defaultValue = null)
         {
             Path = path;
         }
