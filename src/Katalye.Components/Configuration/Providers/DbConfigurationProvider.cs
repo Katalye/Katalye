@@ -1,22 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Katalye.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace Katalye.Components.Configuration.Providers
 {
     public class DbConfigurationProvider : IConfigurationProvider
     {
-        private readonly KatalyeContext _context;
-        private IDictionary<string, string> _lookup;
+        private IReadOnlyDictionary<string, string> _lookup;
 
         public int Priority => 10;
-
-        public DbConfigurationProvider(KatalyeContext context)
-        {
-            _context = context;
-        }
 
         public (bool Success, string Value) TryGet(string path, string defaultValue)
         {
@@ -25,20 +16,9 @@ namespace Katalye.Components.Configuration.Providers
             return (ready, value);
         }
 
-        public async Task<int> Load()
+        public void Load(IReadOnlyDictionary<string, string> dictionary)
         {
-            var values = await _context.ServerConfigurationValues
-                                       .Select(x =>
-                                           new
-                                           {
-                                               x.Key,
-                                               x.Value
-                                           })
-                                       .ToListAsync();
-
-            _lookup = values.ToDictionary(x => x.Key, x => x.Value);
-
-            return _lookup.Count;
+            _lookup = dictionary.ToDictionary(x => x.Key, x => x.Value);
         }
     }
 }
