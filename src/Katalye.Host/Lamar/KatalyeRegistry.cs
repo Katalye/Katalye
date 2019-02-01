@@ -3,7 +3,11 @@ using Katalye.Components;
 using Katalye.Components.Configuration;
 using Katalye.Components.Configuration.Providers;
 using Katalye.Components.Processing;
+using Katalye.Data;
 using Lamar;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
+using IConfigurationProvider = Katalye.Components.Configuration.Providers.IConfigurationProvider;
 
 namespace Katalye.Host.Lamar
 {
@@ -16,6 +20,13 @@ namespace Katalye.Host.Lamar
                 scanner.AssembliesAndExecutablesFromPath("./", assembly => assembly.FullName.StartsWith("Katalye."));
                 scanner.AddAllTypesOf<ProcessingServer>();
                 scanner.WithDefaultConventions();
+            });
+
+            For<NpgsqlConnection>().Use(x =>
+            {
+                var configuration = x.GetInstance<IConfiguration>();
+                var connectionString = configuration.GetConnectionString(nameof(KatalyeContext));
+                return new NpgsqlConnection(connectionString);
             });
 
             For<IProxyGenerator>().Use<ProxyGenerator>();

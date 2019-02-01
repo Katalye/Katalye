@@ -29,11 +29,11 @@ namespace Katalye.Data
             Logger.Debug($"Notifying channel {channelName}.");
             using (var connection = _connectionFactory.Invoke())
             {
+                await connection.OpenAsync(cancellationToken);
                 using (var command = new NpgsqlCommand())
                 {
                     command.Connection = connection;
-                    command.CommandText = "NOTIFY @channel";
-                    command.Parameters.AddWithValue("channel", $"{nameof(DistributedNotify)}.{channelName}");
+                    command.CommandText = $"NOTIFY \"{nameof(DistributedNotify)}_{channelName}\"";
                     await command.ExecuteNonQueryAsync(cancellationToken);
                 }
             }
@@ -44,11 +44,11 @@ namespace Katalye.Data
             Logger.Debug($"Starting wait for notification in channel {channelName}.");
             using (var connection = _connectionFactory.Invoke())
             {
+                await connection.OpenAsync(cancellationToken);
                 using (var command = new NpgsqlCommand())
                 {
                     command.Connection = connection;
-                    command.CommandText = "LISTEN @channel";
-                    command.Parameters.AddWithValue("channel", $"{nameof(DistributedNotify)}.{channelName}");
+                    command.CommandText = $"LISTEN \"{nameof(DistributedNotify)}_{channelName}\"";
                     await command.ExecuteNonQueryAsync(cancellationToken);
                 }
 
