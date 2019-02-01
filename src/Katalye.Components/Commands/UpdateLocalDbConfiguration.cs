@@ -37,7 +37,7 @@ namespace Katalye.Components.Commands
             public async Task<Result> Handle(Command message, CancellationToken cancellationToken)
             {
                 Logger.Info("Updating local db configuration cache.");
-                var values = await _context.ServerConfigurationValues
+                var values = await _context.ServerSettings
                                            .Select(x => new {x.Key, x.Value})
                                            .ToListAsync(cancellationToken);
                 var lookup = values.ToDictionary(x => x.Key, x => x.Value);

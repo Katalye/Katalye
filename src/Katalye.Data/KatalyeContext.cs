@@ -12,7 +12,7 @@ namespace Katalye.Data
     [UsedImplicitly]
     public class KatalyeContext : DbContext
     {
-        public DbSet<ServerConfigurationValue> ServerConfigurationValues { get; set; }
+        public DbSet<ServerSetting> ServerSettings { get; set; }
 
         public DbSet<Job> Jobs { get; set; }
 
@@ -37,58 +37,79 @@ namespace Katalye.Data
         public KatalyeContext(string connectionString) : this(new DbContextOptionsBuilder<KatalyeContext>()
                                                               .UseNpgsql(connectionString).Options)
         {
-            // Hard coded for LinqPad.
+            // Hard-coded for LinqPad.
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder model)
         {
-            modelBuilder.Entity<Job>()
-                        .HasIndex(p => new { p.Jid })
-                        .IsUnique();
-            modelBuilder.Entity<Job>()
-                        .Property(x => x.Arguments)
-                        .IsRequired()
-                        .HasConversion(
-                            list => list.ToString(),
-                            s => ParseJson(s) as JArray
-                        );
+            // Job
+            model.Entity<Job>()
+                 .HasIndex(p => new {p.Jid})
+                 .IsUnique();
+            model.Entity<Job>()
+                 .Property(x => x.Arguments)
+                 .IsRequired()
+                 .HasConversion(
+                     list => list.ToString(),
+                     s => ParseJson(s) as JArray
+                 );
 
-            modelBuilder.Entity<MinionReturnEvent>()
-                        .Property(x => x.ReturnData)
-                        .IsRequired()
-                        .HasConversion(
-                            obj => obj.ToString(),
-                            s => ParseJson(s)
-                        );
+            // MinionReturnEvent
+            model.Entity<MinionReturnEvent>()
+                 .Property(x => x.ReturnData)
+                 .IsRequired()
+                 .HasConversion(
+                     obj => obj.ToString(),
+                     s => ParseJson(s)
+                 );
 
-            modelBuilder.Entity<UnknownEvent>()
-                        .Property(x => x.Data)
-                        .IsRequired()
-                        .HasConversion(
-                            obj => obj.ToString(),
-                            s => ParseJson(s)
-                        );
+            // UnknownEvent
+            model.Entity<UnknownEvent>()
+                 .Property(x => x.Data)
+                 .IsRequired()
+                 .HasConversion(
+                     obj => obj.ToString(),
+                     s => ParseJson(s)
+                 );
 
-            modelBuilder.Entity<Minion>()
-                        .HasIndex(x => x.MinionSlug)
-                        .IsUnique();
-            modelBuilder.Entity<Minion>()
-                        .HasIndex(x => x.GrainGeneration)
-                        .IsUnique();
+            // Minion
+            model.Entity<Minion>()
+                 .HasIndex(x => x.MinionSlug)
+                 .IsUnique();
+            model.Entity<Minion>()
+                 .HasIndex(x => x.GrainGeneration)
+                 .IsUnique();
 
-            modelBuilder.Entity<MinionReturnEvent>()
-                        .HasIndex(nameof(MinionReturnEvent.MinionId), nameof(MinionReturnEvent.JobId))
-                        .IsUnique();
-            modelBuilder.Entity<JobCreationEvent>()
-                        .HasIndex(x => x.JobId)
-                        .IsUnique();
+            // MinionReturnEvent
+            model.Entity<MinionReturnEvent>()
+                 .HasIndex(
+                     nameof(MinionReturnEvent.MinionId),
+                     nameof(MinionReturnEvent.JobId)
+                 )
+                 .IsUnique();
 
-            modelBuilder.Entity<MinionAuthenticationEvent>()
-                        .HasIndex(x => x.PublicKeyHash);
+            // JobCreationEvent
+            model.Entity<JobCreationEvent>()
+                 .HasIndex(x => x.JobId)
+                 .IsUnique();
 
-            modelBuilder.Entity<MinionGrain>()
-                        .HasIndex(nameof(MinionGrain.MinionId), nameof(MinionGrain.Generation), nameof(MinionGrain.Path))
-                        .IsUnique();
+            // MinionAuthenticationEvent
+            model.Entity<MinionAuthenticationEvent>()
+                 .HasIndex(x => x.PublicKeyHash);
+
+            // MinionGrain
+            model.Entity<MinionGrain>()
+                 .HasIndex(
+                     nameof(MinionGrain.MinionId),
+                     nameof(MinionGrain.Generation),
+                     nameof(MinionGrain.Path)
+                 )
+                 .IsUnique();
+
+            // ServerSetting
+            model.Entity<ServerSetting>()
+                 .HasIndex(x => x.Key)
+                 .IsUnique();
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())

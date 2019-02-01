@@ -239,7 +239,7 @@ namespace Katalye.Data.Migrations
                     b.ToTable("MinionReturnEvents");
                 });
 
-            modelBuilder.Entity("Katalye.Data.Entities.ServerConfigurationValue", b =>
+            modelBuilder.Entity("Katalye.Data.Entities.ServerSetting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -260,7 +260,10 @@ namespace Katalye.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServerConfigurationValues");
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("ServerSettings");
                 });
 
             modelBuilder.Entity("Katalye.Data.Entities.UnknownEvent", b =>

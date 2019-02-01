@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+
 // ReSharper disable All
 
 namespace Katalye.Data.Migrations
@@ -9,7 +10,7 @@ namespace Katalye.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ServerConfigurationValues",
+                name: "ServerSettings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -20,16 +21,19 @@ namespace Katalye.Data.Migrations
                     CreatedOn = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedOn = table.Column<DateTimeOffset>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerConfigurationValues", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_ServerSettings", x => x.Id); });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServerSettings_Key",
+                table: "ServerSettings",
+                column: "Key",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ServerConfigurationValues");
+                name: "ServerSettings");
         }
     }
 }

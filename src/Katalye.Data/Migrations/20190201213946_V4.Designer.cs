@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Katalye.Data.Migrations
 {
     [DbContext(typeof(KatalyeContext))]
-    [Migration("20190131235701_V4")]
+    [Migration("20190201213946_V4")]
     partial class V4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -241,7 +241,7 @@ namespace Katalye.Data.Migrations
                     b.ToTable("MinionReturnEvents");
                 });
 
-            modelBuilder.Entity("Katalye.Data.Entities.ServerConfigurationValue", b =>
+            modelBuilder.Entity("Katalye.Data.Entities.ServerSetting", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -262,7 +262,10 @@ namespace Katalye.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ServerConfigurationValues");
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("ServerSettings");
                 });
 
             modelBuilder.Entity("Katalye.Data.Entities.UnknownEvent", b =>

@@ -4,7 +4,7 @@ using Katalye.Data.Interfaces;
 
 namespace Katalye.Data.Entities
 {
-    public class ServerConfigurationValue : IEntity, IAuditable, IConcurrencyCheck
+    public class ServerSetting : IEntity, IAuditable, IConcurrencyCheck
     {
         public Guid Id { get; set; }
 
