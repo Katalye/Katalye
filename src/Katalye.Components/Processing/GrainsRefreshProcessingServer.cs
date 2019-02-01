@@ -14,7 +14,7 @@ namespace Katalye.Components.Processing
 
         private readonly IMediator _mediator;
 
-        public GrainsRefreshProcessingServer(IMediator mediator)
+        public GrainsRefreshProcessingServer(IMediator mediator, IKatalyeConfiguration configuration) : base(configuration)
         {
             _mediator = mediator;
         }

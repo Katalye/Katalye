@@ -14,7 +14,7 @@ namespace Katalye.Components.Processing
 
         public override TimeSpan Interval { get; } = TimeSpan.FromHours(1);
 
-        public CleanupProcessingServer(IMediator mediator)
+        public CleanupProcessingServer(IMediator mediator, IKatalyeConfiguration configuration) : base(configuration)
         {
             _mediator = mediator;
         }

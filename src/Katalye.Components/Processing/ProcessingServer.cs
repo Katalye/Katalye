@@ -11,12 +11,19 @@ namespace Katalye.Components.Processing
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        private readonly IKatalyeConfiguration _configuration;
+
         public abstract TimeSpan Interval { get; }
 
         public virtual bool RequiresDistributedLock => true;
         public virtual string Name => GetType().Name;
 
         public abstract Task Process(CancellationToken cancellationToken);
+
+        public ProcessingServer(IKatalyeConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public void Execute(BackgroundProcessContext context)
         {
@@ -38,7 +45,7 @@ namespace Katalye.Components.Processing
 
         private IDisposable AcquireDistributedLock(BackgroundProcessContext context)
         {
-            if (!RequiresDistributedLock)
+            if (!RequiresDistributedLock || _configuration.DisableDistributedLocks)
             {
                 Logger.Debug("Distibuted lock is not reqired, none will be aquired.");
                 return null;

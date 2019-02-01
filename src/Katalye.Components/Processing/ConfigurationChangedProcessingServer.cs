@@ -21,7 +21,7 @@ namespace Katalye.Components.Processing
 
         public override bool RequiresDistributedLock => false;
 
-        public ConfigurationChangedProcessingServer(IDistributedNotify notify, IMediator mediator)
+        public ConfigurationChangedProcessingServer(IDistributedNotify notify, IMediator mediator, IKatalyeConfiguration configuration) : base(configuration)
         {
             _notify = notify;
             _mediator = mediator;
