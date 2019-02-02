@@ -8,7 +8,7 @@ namespace Katalye.Components.Configuration.Providers
     {
         private readonly IConfiguration _configuration;
 
-        public int Priority => 100;
+        public int Priority => 10;
 
         public string Name => "Environment";
 

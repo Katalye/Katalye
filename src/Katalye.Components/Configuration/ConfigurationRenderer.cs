@@ -49,6 +49,7 @@ namespace Katalye.Components.Configuration
                 {
                     return new RenderedSetting<string>
                     {
+                        Key = path.ToLower(),
                         Value = value,
                         Provider = provider.Name
                     };
@@ -65,6 +66,7 @@ namespace Katalye.Components.Configuration
 
             return new RenderedSetting<object>
             {
+                Key = setting.Key,
                 Value = parsedObj,
                 Provider = setting.Provider
             };
@@ -118,6 +120,8 @@ namespace Katalye.Components.Configuration
 
     public class RenderedSetting<T>
     {
+        public string Key { get; set; }
+
         public T Value { get; set; }
 
         public string Provider { get; set; }

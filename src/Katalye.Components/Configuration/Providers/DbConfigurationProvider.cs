@@ -9,7 +9,7 @@ namespace Katalye.Components.Configuration.Providers
     {
         private IReadOnlyDictionary<string, string> _lookup;
 
-        public int Priority => 10;
+        public int Priority => 100;
 
         public string Name => "Database";
 
