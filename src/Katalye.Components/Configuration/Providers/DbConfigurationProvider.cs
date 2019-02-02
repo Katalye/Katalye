@@ -12,13 +12,13 @@ namespace Katalye.Components.Configuration.Providers
         public (bool Success, string Value) TryGet(string path, string defaultValue)
         {
             var value = defaultValue;
-            var ready = _lookup != null && _lookup.TryGetValue(path, out value);
+            var ready = _lookup != null && _lookup.TryGetValue(path.ToLower(), out value);
             return (ready, value);
         }
 
         public void Load(IReadOnlyDictionary<string, string> dictionary)
         {
-            _lookup = dictionary.ToDictionary(x => x.Key, x => x.Value);
+            _lookup = dictionary.ToDictionary(x => x.Key.ToLower(), x => x.Value);
         }
     }
 }

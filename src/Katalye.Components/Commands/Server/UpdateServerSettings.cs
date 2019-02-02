@@ -56,7 +56,7 @@ namespace Katalye.Components.Commands.Server
                              .Where(x => x.Version.HasValue)
                              .Select(x => new ServerSetting
                              {
-                                 Key = x.Key,
+                                 Key = x.Key.ToLower(),
                                  Value = x.Value,
                                  Version = x.Version ?? 0,
                                  LastUpdated = DateTimeOffset.Now
@@ -68,7 +68,7 @@ namespace Katalye.Components.Commands.Server
                              .Where(x => !x.Version.HasValue)
                              .Select(x => new ServerSetting
                              {
-                                 Key = x.Key,
+                                 Key = x.Key.ToLower(),
                                  Value = x.Value,
                                  LastUpdated = DateTimeOffset.Now
                              })
