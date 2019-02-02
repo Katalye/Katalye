@@ -4,11 +4,9 @@ using Katalye.Data.Interfaces;
 
 namespace Katalye.Data.Entities
 {
-    public class ServerSetting : IEntity, IAuditable, IConcurrencyCheck
+    public class ServerSetting : IAuditable, IConcurrencyCheck
     {
-        public Guid Id { get; set; }
-
-        [Required]
+        [Required, Key]
         public string Key { get; set; }
 
         [Required]

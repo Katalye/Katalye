@@ -105,11 +105,6 @@ namespace Katalye.Data
                      nameof(MinionGrain.Path)
                  )
                  .IsUnique();
-
-            // ServerSetting
-            model.Entity<ServerSetting>()
-                 .HasIndex(x => x.Key)
-                 .IsUnique();
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())

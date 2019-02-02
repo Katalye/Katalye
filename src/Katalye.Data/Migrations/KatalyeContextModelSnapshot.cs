@@ -241,13 +241,10 @@ namespace Katalye.Data.Migrations
 
             modelBuilder.Entity("Katalye.Data.Entities.ServerSetting", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Key")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTimeOffset>("CreatedOn");
-
-                    b.Property<string>("Key")
-                        .IsRequired();
 
                     b.Property<DateTimeOffset?>("LastUpdated");
 
@@ -258,10 +255,7 @@ namespace Katalye.Data.Migrations
 
                     b.Property<int>("Version");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
+                    b.HasKey("Key");
 
                     b.ToTable("ServerSettings");
                 });

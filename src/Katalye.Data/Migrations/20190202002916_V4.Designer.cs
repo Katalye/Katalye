@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Katalye.Data.Migrations
 {
     [DbContext(typeof(KatalyeContext))]
-    [Migration("20190201213946_V4")]
+    [Migration("20190202002916_V4")]
     partial class V4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -243,13 +243,10 @@ namespace Katalye.Data.Migrations
 
             modelBuilder.Entity("Katalye.Data.Entities.ServerSetting", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<string>("Key")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTimeOffset>("CreatedOn");
-
-                    b.Property<string>("Key")
-                        .IsRequired();
 
                     b.Property<DateTimeOffset?>("LastUpdated");
 
@@ -260,10 +257,7 @@ namespace Katalye.Data.Migrations
 
                     b.Property<int>("Version");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
+                    b.HasKey("Key");
 
                     b.ToTable("ServerSettings");
                 });

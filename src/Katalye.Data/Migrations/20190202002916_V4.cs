@@ -13,7 +13,6 @@ namespace Katalye.Data.Migrations
                 name: "ServerSettings",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
                     Key = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: false),
                     Version = table.Column<int>(nullable: false),
@@ -21,13 +20,7 @@ namespace Katalye.Data.Migrations
                     CreatedOn = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedOn = table.Column<DateTimeOffset>(nullable: false)
                 },
-                constraints: table => { table.PrimaryKey("PK_ServerSettings", x => x.Id); });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ServerSettings_Key",
-                table: "ServerSettings",
-                column: "Key",
-                unique: true);
+                constraints: table => { table.PrimaryKey("PK_ServerSettings", x => x.Key); });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
