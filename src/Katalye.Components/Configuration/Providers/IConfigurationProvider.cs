@@ -4,6 +4,8 @@
     {
         int Priority { get; }
 
-        (bool Success, string Value ) TryGet(string path, string defaultValue);
+        string Name { get; }
+
+        (bool Success, string Value) TryGet(string path);
     }
 }

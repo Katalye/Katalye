@@ -17,7 +17,7 @@ namespace Katalye.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSettings(GetServerInfo.Query query)
+        public async Task<IActionResult> GetServerInfo(GetServerInfo.Query query)
         {
             var result = await _mediator.Send(query);
             return Ok(result);
