@@ -12,6 +12,7 @@ namespace Katalye.Data.Entities
         [Required]
         public string Value { get; set; }
 
+        [ConcurrencyCheck]
         public int Version { get; set; }
 
         public DateTimeOffset? LastUpdated { get; set; }

@@ -17,6 +17,7 @@ namespace Katalye.Data.Entities
 
         public JArray Arguments { get; set; }
 
+        [ConcurrencyCheck]
         public int Version { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }

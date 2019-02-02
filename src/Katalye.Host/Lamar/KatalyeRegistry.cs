@@ -42,9 +42,10 @@ namespace Katalye.Host.Lamar
                 var router = x.GetInstance<ConfigurationRouter>();
                 return router.CreateConfiguration();
             });
-            For<IConfigurationProvider>().Use<BuiltInConfigurationProvider>();
-            For<IConfigurationProvider>().Use<DbConfigurationProvider>();
-            For<IConfigurationProvider>().Use<DefaultsConfigurationProvider>();
+            For<DbConfigurationProvider>().Use<DbConfigurationProvider>().Singleton();
+            For<IConfigurationProvider>().Add<BuiltInConfigurationProvider>();
+            For<IConfigurationProvider>().Add(x => x.GetInstance<DbConfigurationProvider>());
+            For<IConfigurationProvider>().Add<DefaultsConfigurationProvider>();
         }
     }
 }

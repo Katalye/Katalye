@@ -9,8 +9,8 @@ namespace Katalye.Data
 {
     public interface IDistributedNotify
     {
-        Task Notify(string channelName, CancellationToken cancellationToken);
-        Task WaitOnce(string channelName, CancellationToken cancellationToken);
+        Task Notify(string channelName, CancellationToken cancellationToken = default(CancellationToken));
+        Task WaitOnce(string channelName, CancellationToken cancellationToken = default(CancellationToken));
     }
 
     public class DistributedNotify : IDistributedNotify

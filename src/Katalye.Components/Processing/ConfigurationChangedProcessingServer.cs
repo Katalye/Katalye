@@ -18,7 +18,7 @@ namespace Katalye.Components.Processing
         private readonly IDistributedNotify _notify;
         private readonly IMediator _mediator;
 
-        public override TimeSpan Interval { get; } = TimeSpan.Zero;
+        public override TimeSpan Interval { get; } = TimeSpan.FromSeconds(5);
 
         public override bool RequiresDistributedLock => false;
 

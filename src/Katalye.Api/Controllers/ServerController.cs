@@ -31,7 +31,7 @@ namespace Katalye.Api.Controllers
         }
 
         [HttpPut("settings")]
-        public async Task<IActionResult> UpdateSettings(UpdateServerSettings.Command query)
+        public async Task<IActionResult> UpdateSettings([FromBody] UpdateServerSettings.Command query)
         {
             var result = await _mediator.Send(query);
             return Ok(result);

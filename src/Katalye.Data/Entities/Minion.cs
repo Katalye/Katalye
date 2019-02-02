@@ -19,6 +19,7 @@ namespace Katalye.Data.Entities
 
         public Guid? GrainGeneration { get; set; }
 
+        [ConcurrencyCheck]
         public int Version { get; set; }
 
         public DateTimeOffset CreatedOn { get; set; }
