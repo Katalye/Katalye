@@ -1,5 +1,6 @@
 ﻿using System;
 using Castle.DynamicProxy;
+using JetBrains.Annotations;
 using Katalye.Components.Configuration.ValueParsers;
 
 namespace Katalye.Components.Configuration
@@ -10,6 +11,7 @@ namespace Katalye.Components.Configuration
 
     public delegate IValueParser CreateValueParser(Type type);
 
+    [UsedImplicitly]
     public class RoutingInterceptor : IRoutingInterceptor
     {
         private readonly IConfigurationRenderer _configurationRenderer;
@@ -26,7 +28,7 @@ namespace Katalye.Components.Configuration
                                                        + "this should be impossible at this point");
 
             var result = _configurationRenderer.RenderSetting(configuration.Path, invocation.Method.ReturnType);
-            invocation.ReturnValue = result;
+            invocation.ReturnValue = result.Value;
         }
     }
 }

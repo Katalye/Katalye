@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 namespace Katalye.Components.Configuration.Providers
 {
     [UsedImplicitly]
-    public class DefaultsProvider : IConfigurationProvider
+    public class DefaultsConfigurationProvider : IConfigurationProvider
     {
         private static readonly Lazy<Dictionary<string, string>> DefaultValues
             = new Lazy<Dictionary<string, string>>(CreateDefaultValues, LazyThreadSafetyMode.PublicationOnly);

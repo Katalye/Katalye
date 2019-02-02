@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 namespace Katalye.Components.Configuration.Providers
 {
     [UsedImplicitly]
-    public class BuiltInProvider : IConfigurationProvider
+    public class BuiltInConfigurationProvider : IConfigurationProvider
     {
         private readonly IConfiguration _configuration;
 
@@ -12,7 +12,7 @@ namespace Katalye.Components.Configuration.Providers
 
         public string Name => "Environment";
 
-        public BuiltInProvider(IConfiguration configuration)
+        public BuiltInConfigurationProvider(IConfiguration configuration)
         {
             _configuration = configuration;
         }
