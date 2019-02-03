@@ -66,7 +66,8 @@ namespace Katalye.Components.Notifications.Handlers
 
                 var minion = new Minion
                 {
-                    Id = bulk.MinionId
+                    Id = bulk.MinionId,
+                    Version = bulk.MinionVersion
                 };
                 _context.Attach(minion);
 
@@ -93,7 +94,6 @@ namespace Katalye.Components.Notifications.Handlers
 
                 _context.MinionGrains.AddRange(minionGrains);
                 _context.MinionGrainValues.AddRange(minionGrainValues);
-                minion.Version = bulk.MinionVersion;
                 minion.GrainGeneration = generation;
                 minion.LastGrainRefresh = bulk.ReturnEvent.Timestamp;
 
