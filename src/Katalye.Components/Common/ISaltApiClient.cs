@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RestEase;
 
 namespace Katalye.Components.Common
@@ -10,6 +11,9 @@ namespace Katalye.Components.Common
     {
         [Post("run")]
         Task<CreateJobResult> CreateJob([Body] CreateJobRequest createJobRequest);
+
+        [Post("run")]
+        Task<FindJobResult> FindJob([Body] CreateJobRequest createJobRequest);
     }
 
     public class CreateJobRequest
@@ -49,5 +53,10 @@ namespace Katalye.Components.Common
         public ICollection<string> Minions { get; set; }
 
         public string Jid { get; set; }
+    }
+
+    public class FindJobResult
+    {
+        public ICollection<IDictionary<string, JToken>> Return { get; set; }
     }
 }

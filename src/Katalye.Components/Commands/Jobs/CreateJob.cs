@@ -9,7 +9,7 @@ using Katalye.Components.Common;
 using MediatR;
 using NLog;
 
-namespace Katalye.Components.Commands
+namespace Katalye.Components.Commands.Jobs
 {
     public static class CreateJob
     {

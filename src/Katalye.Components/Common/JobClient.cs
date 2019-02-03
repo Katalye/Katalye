@@ -14,6 +14,9 @@ namespace Katalye.Components.Common
         RunnerAsync,
 
         [EnumMember(Value = "wheel_async")]
-        WheelAsync
+        WheelAsync,
+
+        [EnumMember(Value = "local")]
+        Local,
     }
 }

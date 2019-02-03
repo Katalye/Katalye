@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Katalye.Components.Commands.Jobs;
 using Katalye.Components.Common;
 using Katalye.Components.Configuration;
 using MediatR;
