@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using Katalye.Components.Commands;
+using Katalye.Components.Commands.Minions;
 using Katalye.Components.Configuration;
 using MediatR;
 
@@ -22,7 +22,7 @@ namespace Katalye.Components.Processing
 
         public override async Task Process(CancellationToken cancellationToken)
         {
-            await _mediator.Send(new RefreshMinionGrains.Command
+            await _mediator.Send(new RefreshStaleGrains.Command
             {
                 Age = TimeSpan.FromHours(12)
             }, cancellationToken);

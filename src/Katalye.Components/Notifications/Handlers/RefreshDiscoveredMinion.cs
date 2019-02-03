@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using Katalye.Components.Commands;
+using Katalye.Components.Commands.Minions;
 using MediatR;
 using NLog;
 
@@ -24,7 +24,7 @@ namespace Katalye.Components.Notifications.Handlers
         {
             Logger.Info($"Minion {notification.MinionSlug} was newly discovered. Will refresh grains.");
 
-            await _mediator.Send(new RefreshMinionGrains.Command
+            await _mediator.Send(new RefreshStaleGrains.Command
             {
                 Minions = new List<string>
                 {

@@ -9,7 +9,7 @@ using Katalye.Components.Configuration;
 using MediatR;
 using NLog;
 
-namespace Katalye.Components.Commands
+namespace Katalye.Components.Commands.Minions
 {
     public static class RefreshKeys
     {

@@ -13,9 +13,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
-namespace Katalye.Components.Commands
+namespace Katalye.Components.Commands.Minions
 {
-    public static class RefreshMinionGrains
+    public static class RefreshStaleGrains
     {
         public class Command : IRequest<Result>
         {

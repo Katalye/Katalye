@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Katalye.Components.Commands.Minions;
 using Katalye.Components.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,13 @@ namespace Katalye.Api.Controllers
                 return NotFound();
             }
 
+            return Ok(result);
+        }
+
+        [HttpPost("{Id}/grains/refresh")]
+        public async Task<IActionResult> RefreshMinionGrains(RefreshMinionGrains.Command command)
+        {
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
     }

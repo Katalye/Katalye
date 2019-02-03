@@ -75,13 +75,13 @@ namespace Katalye.Components.Commands.Jobs
                                 let status = CalculateJobStatus(missing, pending, timeout)
                                 select new
                                 {
-                                    Minion = minion,
+                                    Id = minion,
                                     Status = status
                                 }).ToList();
 
                 foreach (var minion in statuses.Where(x => x.Status == JobStatus.Timeout))
                 {
-                    Logger.Warn($"Minion {minion} timed out while finding job {message.Jid}.");
+                    Logger.Warn($"Minion {minion.Id} timed out while finding job {message.Jid}.");
                 }
 
                 foreach (var minion in statuses.Where(x => x.Status == JobStatus.Missing))
@@ -89,8 +89,8 @@ namespace Katalye.Components.Commands.Jobs
                     Logger.Error($"Failed to get job {message.Jid} status for minion {minion}. Report this error to a Katalye developer.");
                 }
 
-                var completedMinions = statuses.Where(x => x.Status == JobStatus.Completed).Select(x => x.Minion).ToList();
-                var pendingMinions = statuses.Where(x => x.Status == JobStatus.Pending).Select(x => x.Minion).ToList();
+                var completedMinions = statuses.Where(x => x.Status == JobStatus.Completed).Select(x => x.Id).ToList();
+                var pendingMinions = statuses.Where(x => x.Status == JobStatus.Pending).Select(x => x.Id).ToList();
                 var jobCompleted = statuses.All(x => x.Status == JobStatus.Completed);
 
                 Logger.Info($"Found {completedMinions.Count} completed, {pendingMinions.Count} pending with a completion status of {jobCompleted}.");
