@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Data.Entities;
 using Katalye.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Katalye.Data
@@ -29,6 +31,8 @@ namespace Katalye.Data
         public DbSet<MinionGrain> MinionGrains { get; set; }
 
         public DbSet<MinionGrainValue> MinionGrainValues { get; set; }
+
+        public DbSet<AdHocTask> AdHocTasks { get; set; }
 
         public KatalyeContext(DbContextOptions<KatalyeContext> options) : base(options)
         {
@@ -105,6 +109,15 @@ namespace Katalye.Data
                      nameof(MinionGrain.Path)
                  )
                  .IsUnique();
+
+            // AdHocTask
+            model.Entity<AdHocTask>()
+                 .Property(x => x.Metadata)
+                 .IsRequired()
+                 .HasConversion(
+                     obj => JsonConvert.SerializeObject(obj),
+                     s => JsonConvert.DeserializeObject<Dictionary<string, string>>(s)
+                 );
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
