@@ -36,6 +36,8 @@ namespace Katalye.Components.Queries.Tasks
 
         public class Model
         {
+            public Guid Id { get; set; }
+
             public string Tag { get; set; }
 
             public Dictionary<string, string> Metadata { get; set; }
@@ -62,6 +64,7 @@ namespace Katalye.Components.Queries.Tasks
                                            .OrderByDescending(x => x.StartedOn)
                                            .Select(x => new Model
                                            {
+                                               Id = x.Id,
                                                Status = x.Status,
                                                Tag = x.Tag,
                                                Metadata = x.Metadata,

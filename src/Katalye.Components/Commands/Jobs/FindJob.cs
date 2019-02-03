@@ -55,7 +55,7 @@ namespace Katalye.Components.Commands.Jobs
                     Function = SaltCommands.SaltUtilFindJob,
                     TargetType = JobTarget.List,
                     Target = minions,
-                    Client = JobClient.LocalAsync,
+                    Client = JobClient.Local,
                     ExternalAuth = JobExternalAuth.Pam,
                     Password = _configuration.SaltApiServicePassword,
                     Username = _configuration.SaltApiServiceUsername,
@@ -70,8 +70,8 @@ namespace Katalye.Components.Commands.Jobs
                 var statuses = (from minion in message.Minions
                                 from minionResult in minionResults.Where(x => x.Key == minion).Select(x => x.Value).DefaultIfEmpty()
                                 let missing = minionResult == null
-                                let pending = minionResult.HasValues
-                                let timeout = minionResult.Type == JTokenType.Boolean && !minionResult.Value<bool>()
+                                let pending = minionResult?.HasValues == true
+                                let timeout = minionResult?.Type == JTokenType.Boolean && !minionResult.Value<bool>()
                                 let status = CalculateJobStatus(missing, pending, timeout)
                                 select new
                                 {

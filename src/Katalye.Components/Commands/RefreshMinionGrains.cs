@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Components.Commands.Jobs;
+using Katalye.Components.Commands.Tasks;
 using Katalye.Components.Common;
 using Katalye.Components.Configuration;
 using Katalye.Data;
@@ -26,6 +27,7 @@ namespace Katalye.Components.Commands
 
         public class Result
         {
+            public Guid? TaskId { get; set; }
         }
 
         [UsedImplicitly]
@@ -73,12 +75,21 @@ namespace Katalye.Components.Commands
                     }, cancellationToken);
 
                     Logger.Info($"Salt job {result.Jid} created.");
-                }
-                else
-                {
-                    Logger.Info("No minions require a grain refresh.");
+
+                    var monitorResult = await _mediator.Send(new MonitorJobExecution.Command
+                    {
+                        Jid = result.Jid,
+                        Minions = result.TargetedMinions,
+                        Tag = "grains/refresh"
+                    }, cancellationToken);
+
+                    return new Result
+                    {
+                        TaskId = monitorResult.TaskId
+                    };
                 }
 
+                Logger.Info("No minions require a grain refresh.");
                 return new Result();
             }
         }

@@ -1,7 +1,9 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Components.Commands.Jobs;
+using Katalye.Components.Commands.Tasks;
 using Katalye.Components.Common;
 using Katalye.Components.Configuration;
 using MediatR;
@@ -17,6 +19,7 @@ namespace Katalye.Components.Commands
 
         public class Result
         {
+            public Guid TaskId { get; set; }
         }
 
         [UsedImplicitly]
@@ -37,7 +40,7 @@ namespace Katalye.Components.Commands
             {
                 Logger.Info("Requesting all known keys from master.");
 
-                await _mediator.Send(new CreateJob.Command
+                var result = await _mediator.Send(new CreateJob.Command
                 {
                     Client = JobClient.WheelAsync,
                     Function = SaltCommands.KeyListAll,
@@ -45,7 +48,17 @@ namespace Katalye.Components.Commands
                     Password = _configuration.SaltApiServicePassword
                 }, cancellationToken);
 
-                return new Result();
+                var monitorResult = await _mediator.Send(new MonitorJobExecution.Command
+                {
+                    Jid = result.Jid,
+                    Minions = result.TargetedMinions,
+                    Tag = "keys/refresh"
+                }, cancellationToken);
+
+                return new Result
+                {
+                    TaskId = monitorResult.TaskId
+                };
             }
         }
     }
