@@ -29,6 +29,8 @@ namespace Katalye.Components.Commands.Jobs
             public ICollection<string> PendingMinions { get; set; }
 
             public bool JobCompleted { get; set; }
+
+            public bool AllMinionsTimedOut { get; set; }
         }
 
         [UsedImplicitly]
@@ -92,6 +94,7 @@ namespace Katalye.Components.Commands.Jobs
                 var completedMinions = statuses.Where(x => x.Status == JobStatus.Completed).Select(x => x.Id).ToList();
                 var pendingMinions = statuses.Where(x => x.Status == JobStatus.Pending).Select(x => x.Id).ToList();
                 var jobCompleted = statuses.All(x => x.Status == JobStatus.Completed);
+                var allMinionsTimeout = statuses.All(x => x.Status == JobStatus.Timeout || x.Status == JobStatus.Completed);
 
                 Logger.Info($"Found {completedMinions.Count} completed, {pendingMinions.Count} pending with a completion status of {jobCompleted}.");
 
@@ -99,7 +102,8 @@ namespace Katalye.Components.Commands.Jobs
                 {
                     CompletedMinions = completedMinions,
                     PendingMinions = pendingMinions,
-                    JobCompleted = jobCompleted
+                    JobCompleted = jobCompleted,
+                    AllMinionsTimedOut = allMinionsTimeout
                 };
             }
 

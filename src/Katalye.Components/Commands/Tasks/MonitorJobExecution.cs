@@ -111,6 +111,11 @@ namespace Katalye.Components.Commands.Tasks
                     {
                         completed = true;
                     }
+                    else if (result.AllMinionsTimedOut)
+                    {
+                        Logger.Warn("All minions timed out, assuming failure.");
+                        timeout = true;
+                    }
                     else
                     {
                         timeout = timeoutTime < DateTimeOffset.Now;
