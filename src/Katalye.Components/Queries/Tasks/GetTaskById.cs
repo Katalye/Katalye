@@ -22,6 +22,8 @@ namespace Katalye.Components.Queries.Tasks
 
         public class Result
         {
+            public Guid Id { get; set; }
+
             public string Tag { get; set; }
 
             public Dictionary<string, string> Metadata { get; set; }
@@ -47,6 +49,7 @@ namespace Katalye.Components.Queries.Tasks
                                            .Where(x => x.Id == message.Id)
                                            .Select(x => new Result
                                            {
+                                               Id = x.Id,
                                                Status = x.Status,
                                                Tag = x.Tag,
                                                Metadata = x.Metadata,
