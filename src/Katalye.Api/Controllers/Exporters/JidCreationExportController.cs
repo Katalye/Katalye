@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
 using Newtonsoft.Json.Linq;
-
 using NLog;
 
 namespace Katalye.Api.Controllers.Exporters

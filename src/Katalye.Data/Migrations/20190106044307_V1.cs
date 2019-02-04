@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+
 // ReSharper disable All
 
 namespace Katalye.Data.Migrations
@@ -21,10 +22,7 @@ namespace Katalye.Data.Migrations
                     CreatedOn = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedOn = table.Column<DateTimeOffset>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Jobs", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Jobs", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Minions",
@@ -40,10 +38,7 @@ namespace Katalye.Data.Migrations
                     CreatedOn = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedOn = table.Column<DateTimeOffset>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Minions", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Minions", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "UnknownEvents",
@@ -55,10 +50,7 @@ namespace Katalye.Data.Migrations
                     CreatedOn = table.Column<DateTimeOffset>(nullable: false),
                     ModifiedOn = table.Column<DateTimeOffset>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UnknownEvents", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_UnknownEvents", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "JobCreationEvents",
@@ -210,7 +202,7 @@ namespace Katalye.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MinionGrains_MinionId_Generation_Path",
                 table: "MinionGrains",
-                columns: new[] { "MinionId", "Generation", "Path" },
+                columns: new[] {"MinionId", "Generation", "Path"},
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -226,7 +218,7 @@ namespace Katalye.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_MinionReturnEvents_MinionId_JobId",
                 table: "MinionReturnEvents",
-                columns: new[] { "MinionId", "JobId" },
+                columns: new[] {"MinionId", "JobId"},
                 unique: true);
 
             migrationBuilder.CreateIndex(

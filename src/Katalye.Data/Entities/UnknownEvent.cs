@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Katalye.Data.Entities
 {
-    public class UnknownEvent: IEntity, IAuditable
+    public class UnknownEvent : IEntity, IAuditable
     {
         public Guid Id { get; set; }
 

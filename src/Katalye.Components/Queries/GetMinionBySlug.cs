@@ -64,7 +64,7 @@ namespace Katalye.Components.Queries
                                                })
                                                .ToListAsync(cancellationToken);
 
-                    result.Grains = grains.ToDictionary(x => x.Path, x => (ICollection<string>)x.Values);
+                    result.Grains = grains.ToDictionary(x => x.Path, x => (ICollection<string>) x.Values);
                 }
 
                 return result;

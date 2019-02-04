@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -23,12 +22,12 @@ namespace Katalye.Components
                 return token.ToObject<List<T>>();
             }
 
-            return new List<T> { token.ToObject<T>() };
+            return new List<T> {token.ToObject<T>()};
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            var list = (List<T>)value;
+            var list = (List<T>) value;
             if (list.Count == 1)
             {
                 value = list[0];

@@ -56,7 +56,7 @@ namespace Katalye.Components.Queries
             public async Task<Result> Handle(Query message, CancellationToken cancellationToken)
             {
                 var valuePairs = (message.GrainSearch ?? new List<string>())
-                                 .Select(x => x.Split(new[] { ',' }, 2))
+                                 .Select(x => x.Split(new[] {','}, 2))
                                  .Select(x => new
                                  {
                                      Key = x.First(),

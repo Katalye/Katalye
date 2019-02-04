@@ -8,7 +8,7 @@ namespace Katalye.Components
     {
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            var datetime = (DateTime)base.ReadJson(reader, objectType, existingValue, serializer);
+            var datetime = (DateTime) base.ReadJson(reader, objectType, existingValue, serializer);
             var result = new DateTime(datetime.Ticks, DateTimeKind.Utc);
             return result;
         }
