@@ -16,9 +16,6 @@ namespace Katalye.Components.Queries.Tasks
         public class Query : IRequest<Result>, IPaginatedQuery
         {
             [Required]
-            public Guid? Id { get; set; }
-
-            [Required]
             public ICollection<BackgroundTaskStatus> Status { get; set; } = new List<BackgroundTaskStatus>
             {
                 BackgroundTaskStatus.Processing,
