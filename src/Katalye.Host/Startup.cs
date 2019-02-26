@@ -44,7 +44,7 @@ namespace Katalye.Host
                     .AddDbContext<KatalyeContext>(options => options.UseNpgsql(connectionString));
 
             services.AddSignalR()
-                    .AddPostgreSql();
+                    .AddPostgreSql(options => options.Prefix = "katalye:");
 
             services.AddHangfire(config =>
                 config.UsePostgreSqlStorage(Configuration.GetConnectionString(nameof(KatalyeContext))));

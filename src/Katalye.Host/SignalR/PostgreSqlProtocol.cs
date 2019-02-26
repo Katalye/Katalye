@@ -67,7 +67,7 @@ namespace Katalye.Host.SignalR
             }
         }
 
-        public RedisInvocation ReadInvocation(ReadOnlyMemory<byte> data)
+        public PostgreSqlInvocation ReadInvocation(ReadOnlyMemory<byte> data)
         {
             // See WriteInvocation for the format
             ValidateArraySize(ref data, 2, "Invocation");
@@ -88,7 +88,7 @@ namespace Katalye.Host.SignalR
 
             // Read payload
             var message = ReadSerializedHubMessage(ref data);
-            return new RedisInvocation(message, excludedConnectionIds);
+            return new PostgreSqlInvocation(message, excludedConnectionIds);
         }
 
         private void WriteSerializedHubMessage(Stream stream, SerializedHubMessage message)

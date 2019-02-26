@@ -15,6 +15,7 @@ namespace Katalye.Host.SignalR
 
         private readonly Func<NpgsqlConnection> _connectionFactory;
         private readonly HubConnectionStore _connections = new HubConnectionStore();
+
         // ReSharper disable once NotAccessedField.Local
         private readonly PostgreSqlOptions _options;
         private readonly PostgreSqlChannels _channels;
@@ -23,14 +24,13 @@ namespace Katalye.Host.SignalR
 
         private PostgreSqlBus _bus;
 
-        public PostgreSqlHubLifetimeManager(IOptions<PostgreSqlOptions> options, IHubProtocolResolver hubProtocolResolver, Func<NpgsqlConnection> connectionFactory)
+        public PostgreSqlHubLifetimeManager(IOptions<PostgreSqlOptions> options, IHubProtocolResolver hubProtocolResolver,
+                                            Func<NpgsqlConnection> connectionFactory)
         {
             _connectionFactory = connectionFactory;
             _options = options.Value;
-            _channels = new PostgreSqlChannels(typeof(THub).FullName);
+            _channels = new PostgreSqlChannels(options.Value.Prefix + typeof(THub).FullName);
             _protocol = new PostgreSqlProtocol(hubProtocolResolver.AllProtocols);
-
-            _logger.Info("Connecting to endpoints.");
             _ = EnsureRedisServerConnection();
         }
 
@@ -57,7 +57,7 @@ namespace Katalye.Host.SignalR
         {
             var message = _protocol.WriteInvocation(methodName, args);
             await EnsureRedisServerConnection();
-            _logger.Info($"PublishToChannel {_channels.All}.");
+            _logger.Info($"Publishing to channel: {_channels.All}.");
             await _bus.PublishAsync(_channels.All, message);
         }
 
@@ -125,13 +125,13 @@ namespace Katalye.Host.SignalR
 
         private async Task SubscribeToAll()
         {
-            _logger.Info("Subscribing All.");
+            _logger.Info("Subscribing to all messages from bus.");
             var channel = await _bus.SubscribeAsync(_channels.All);
             channel.OnMessage(async channelMessage =>
             {
                 try
                 {
-                    _logger.Info("ReceivedFromChannel All.");
+                    _logger.Info("Received message from bus.");
 
                     var invocation = _protocol.ReadInvocation(channelMessage.Message);
 
@@ -146,7 +146,7 @@ namespace Katalye.Host.SignalR
                 }
                 catch (Exception ex)
                 {
-                    _logger.Info(ex, "FailedWritingMessage.");
+                    _logger.Info(ex, "Failed writing message to hub.");
                 }
             });
         }
