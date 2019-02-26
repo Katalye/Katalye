@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Katalye.Components.Commands.Minions;
+using Katalye.Components.Common;
 using MediatR;
 using NLog;
 
@@ -31,6 +32,11 @@ namespace Katalye.Components.Notifications.Handlers
                     notification.MinionSlug
                 }
             }, cancellationToken);
+
+            await _mediator.PublishEvent(
+                $"v1:minions:{notification.MinionSlug}:new",
+                ("minionId", notification.MinionSlug)
+            );
         }
     }
 }

@@ -9,7 +9,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
-namespace Katalye.Components.Commands
+namespace Katalye.Components.Commands.Minions
 {
     public static class MinionSeen
     {

@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using JetBrains.Annotations;
+using Katalye.Components.Commands.Minions;
+using Katalye.Components.Common;
 using Katalye.Components.Notifications;
 using Katalye.Data;
 using Katalye.Data.Entities;
@@ -13,7 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 
-namespace Katalye.Components.Commands
+namespace Katalye.Components.Commands.Jobs
 {
     public static class JobReturned
     {
@@ -132,6 +134,11 @@ namespace Katalye.Components.Commands
                     Function = message.Data.Function,
                     MinionReturnEventId = returnEventId
                 });
+                await _mediator.PublishEvent(
+                    $"v1:minions:{message.MinionSlug}:jobs:{job.JobId}:returned",
+                    ("minionId", message.MinionSlug),
+                    ("jid", message.Jid)
+                );
             }
 
             private (int ChangedCount, int FailedCount, int SuccessCount) ParseStats(Command message)

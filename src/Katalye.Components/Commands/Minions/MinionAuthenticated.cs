@@ -5,13 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Hangfire;
 using JetBrains.Annotations;
+using Katalye.Components.Common;
 using Katalye.Data;
 using Katalye.Data.Entities;
 using MediatR;
 using Newtonsoft.Json;
 using NLog;
 
-namespace Katalye.Components.Commands
+namespace Katalye.Components.Commands.Minions
 {
     public static class MinionAuthenticated
     {
@@ -95,6 +96,11 @@ namespace Katalye.Components.Commands
                     await _context.SaveChangesAsync();
                     unit.Commit();
                 }
+
+                await _mediator.PublishEvent(
+                    $"v1:minions:{message.Slug}:authenticated",
+                    ("minionId", message.Slug)
+                );
 
                 Logger.Info("Processing authentication event for minion completed.");
             }

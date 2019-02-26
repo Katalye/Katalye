@@ -74,6 +74,12 @@ namespace Katalye.Components.Commands.Minions
                         Password = _configuration.SaltApiServicePassword
                     }, cancellationToken);
 
+                    if (result.Jid == null)
+                    {
+                        Logger.Warn("Salt job was not created created.");
+                        return new Result();
+                    }
+
                     Logger.Info($"Salt job {result.Jid} created.");
 
                     var monitorResult = await _mediator.Send(new MonitorJobExecution.Command

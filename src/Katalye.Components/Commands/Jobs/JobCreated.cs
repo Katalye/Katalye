@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
 
-namespace Katalye.Components.Commands
+namespace Katalye.Components.Commands.Jobs
 {
     public static class JobCreated
     {

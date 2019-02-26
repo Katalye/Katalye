@@ -21,12 +21,14 @@ namespace Katalye.Components.Notifications.Handlers
         private readonly KatalyeContext _context;
         private readonly IBackgroundJobClient _jobClient;
         private readonly JsonFlattener _jsonFlattener;
+        private readonly IMediator _mediator;
 
-        public GrainsRefreshed(KatalyeContext context, IBackgroundJobClient jobClient, JsonFlattener jsonFlattener)
+        public GrainsRefreshed(KatalyeContext context, IBackgroundJobClient jobClient, JsonFlattener jsonFlattener, IMediator mediator)
         {
             _context = context;
             _jobClient = jobClient;
             _jsonFlattener = jsonFlattener;
+            _mediator = mediator;
         }
 
         public Task Handle(JobReturnSaved.Notification notification, CancellationToken cancellationToken)
@@ -53,6 +55,7 @@ namespace Katalye.Components.Notifications.Handlers
                                   {
                                       ReturnEvent = returnEvent,
                                       MinionId = m.Id,
+                                      m.MinionSlug,
                                       MinionVersion = m.Version,
                                       MinionLastGrainRefresh = m.LastGrainRefresh
                                   }).SingleOrDefaultAsync();
@@ -102,6 +105,11 @@ namespace Katalye.Components.Notifications.Handlers
                 unit.Commit();
 
                 Logger.Debug($"Commited {grains.Count} grains under generation {generation}.");
+
+                await _mediator.PublishEvent(
+                    $"v1:minions:{bulk.MinionSlug}:grains:updated",
+                    ("minionId", bulk.MinionSlug)
+                );
             }
         }
     }

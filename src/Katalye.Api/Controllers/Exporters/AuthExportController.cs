@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Katalye.Components.Commands;
+using Katalye.Components.Commands.Minions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
