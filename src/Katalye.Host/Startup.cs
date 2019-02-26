@@ -4,13 +4,16 @@ using Hangfire.Common;
 using Hangfire.PostgreSql;
 using JetBrains.Annotations;
 using Katalye.Api.Controllers;
+using Katalye.Api.Hubs;
 using Katalye.Components.Processing;
 using Katalye.Data;
 using Katalye.Host.Lamar;
 using Katalye.Host.Middleware;
+using Katalye.Host.SignalR;
 using Lamar;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +43,9 @@ namespace Katalye.Host
             services.AddEntityFrameworkNpgsql()
                     .AddDbContext<KatalyeContext>(options => options.UseNpgsql(connectionString));
 
+            services.AddSignalR()
+                    .AddPostgreSql();
+
             services.AddHangfire(config =>
                 config.UsePostgreSqlStorage(Configuration.GetConnectionString(nameof(KatalyeContext))));
 
@@ -64,6 +70,7 @@ namespace Katalye.Host
             }
 
             app.UseMvc();
+            app.UseSignalR(builder => builder.MapHub<EventsHub>("/hub/v1/events", options => options.Transports = HttpTransportType.WebSockets));
 
             var processingServers = app.ApplicationServices
                                        .GetServices<ProcessingServer>()
