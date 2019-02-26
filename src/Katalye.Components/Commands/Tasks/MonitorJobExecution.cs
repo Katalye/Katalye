@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using Hangfire;
 using JetBrains.Annotations;
 using Katalye.Components.Commands.Jobs;
+using Katalye.Components.Common;
 using Katalye.Data;
-using Katalye.Data.Common;
 using Katalye.Data.Entities;
 using MediatR;
 using NLog;
+using BackgroundTaskStatus = Katalye.Data.Common.BackgroundTaskStatus;
 
 namespace Katalye.Components.Commands.Tasks
 {
@@ -77,6 +78,10 @@ namespace Katalye.Components.Commands.Tasks
 
                     unit.Commit();
 
+                    await _mediator.PublishEvent($"v1:tasks:{taskId}:new",
+                        ("taskId", taskId.ToString())
+                    );
+
                     return new Result
                     {
                         TaskId = taskId
@@ -89,6 +94,9 @@ namespace Katalye.Components.Commands.Tasks
             {
                 var task = await _context.AdHocTasks.FindAsync(taskId) ?? throw new Exception($"Task {taskId} does not exist.");
 
+                await _mediator.PublishEvent($"v1:tasks:{taskId}:processing",
+                    ("taskId", taskId.ToString())
+                );
                 task.Status = BackgroundTaskStatus.Processing;
                 await _context.SaveChangesAsync();
 
@@ -140,6 +148,10 @@ namespace Katalye.Components.Commands.Tasks
                 }
 
                 await _context.SaveChangesAsync();
+
+                await _mediator.PublishEvent($"v1:tasks:{taskId}:done",
+                    ("taskId", taskId.ToString())
+                );
             }
         }
     }
